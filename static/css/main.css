@@ -23,6 +23,13 @@ body {
     font-style: italic
 }
 
+h2{
+    color: dimgray;
+}
+
+em{
+    color: darkblue;
+}
 
 .vercodigo{
     font-weight: bold;
@@ -109,7 +116,7 @@ body {
 
 .container {
   width: auto;
-  max-width: 800px;
+  max-width: 960px;
   text-align: center;
 }
 .container .text-muted {
