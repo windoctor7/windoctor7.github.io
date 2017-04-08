@@ -11,14 +11,13 @@ paginate: 5
 gems: [jekyll-paginate]
 port: 3000
 safe: true
-
-
+  
 # edit here to achieve your personal greatness
 url: http://windoctor7.github.io/
 baseurl: 
-title: Ascari Romo
-author: Ascari Romo
-description: Blog personal
+title: Desarrollo ágil - Java, Spring Boot, Tapestry, Mongo, Gradle
+author: Ascari Q. Romo Pedraza
+description: Desarrollo ágil de aplicaciones con Java (Spring Boot, Tapestry, Mongo, Gradle)
 avatar: rsz_profile.jpg
 email: molder.itp@gmail.com
 github: windoctor7 # username
