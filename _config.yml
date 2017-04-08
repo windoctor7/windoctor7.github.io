@@ -1,0 +1,32 @@
+# top level stuff you probably don't need to touch
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+rdiscount:
+  extensions: [smart]
+permalink: /:title.html
+paginate: 5
+gems: [jekyll-paginate]
+port: 3000
+safe: true
+
+
+# edit here to achieve your personal greatness
+url: http://windoctor7.github.io/
+baseurl: 
+title: Ascari Romo
+author: Ascari Romo
+description: Blog personal
+avatar: rsz_profile.jpg
+email: molder.itp@gmail.com
+github: windoctor7 # username
+twitter: windoctor
+linkedin: ascari-q-romo-pedraza-01532350
+#Comment out if you don't want disqus 
+disqus: ascariromo
+
+
+# needed for travis-ci build
+exclude: [vendor]

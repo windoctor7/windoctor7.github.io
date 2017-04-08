@@ -1,0 +1,60 @@
+---
+layout: layout
+---
+
+<div class="container">
+	<div class="blog-post">
+		<h3>
+		  <strong><a href="{{ page.url }}">{{ page.title }}</a></strong>
+		</h3>
+	</div>
+	<div class="blog-title">
+		<h4>
+		<strong>{{ page.date | date: "%B %e, %Y" }}</strong>
+			&nbsp;&nbsp;
+			{% for tag in page.tags %}
+			 <span class="label label-success">{{ tag }}</span>
+			{% endfor %}
+		</h4>
+	</div>
+    <br />
+    {% for source in page.source %}
+        <span style="float:right" class="octicon octicon-mark-github">
+            <a href="{{page.source}}"><strong>Codigo fuente disponible de este tutorial</strong></a>
+        </span>
+    {% endfor %}
+    <br />
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="blogpost">
+			  {{ content }}
+                <br />
+                    {% for source in page.source %}
+                        <span style="float:right" class="octicon octicon-mark-github">
+                            <a href="{{page.source}}"><strong>Codigo fuente disponible de este tutorial</strong></a>
+                        </span>
+                    {% endfor %}
+                <br />
+			   <hr>
+			   <div class="related-posts">
+				   <h5 class="relacionados">Otros post que pueden interesarte</h5>
+				   {% for post in site.related_posts limit:3 %}
+						<div class="row">
+							 <div class="col-sm-4 col-md-4 col-lg-4">
+								 <h6 style="text-align: right">
+								 	{{ post.date | date: "%B %e, %Y" }}
+								 </h6>
+							 </div>
+							 <div class="col-sm-8 col-md-8 col-lg-8">
+								 <h6 style="text-align: left">
+								 	<strong><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></strong>
+								 </h6>
+							 </div>
+						</div>
+					{% endfor %}
+			   </div>
+			</div>
+		</div>
+	</div>
+	{% include disqus.html %}
+</div>
