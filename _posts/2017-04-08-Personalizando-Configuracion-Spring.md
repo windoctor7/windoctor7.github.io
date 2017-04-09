@@ -1,7 +1,7 @@
 ---
 layout: post
 section-type: post
-title: Personalizando la configuración de Spring según el ambiente de ejecución
+title: Ejecutando diferentes recursos según el ambiente de ejecución
 overview: Frecuentemente necesitamos obtener recursos o urls que varian dependiendo si estamos ejecutando la aplicación en desarrollo, QA o producción. Este Cookbook explica como hacerlo de forma muy fácil usando los perfiles de Spring.
 category: Cookbook
 tags: [ 'spring boot']
