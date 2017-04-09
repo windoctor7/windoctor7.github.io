@@ -31,6 +31,10 @@ em{
     color: darkblue;
 }
 
+hr { 
+    width: 100%;
+  }
+
 .vercodigo{
     font-weight: bold;
 }

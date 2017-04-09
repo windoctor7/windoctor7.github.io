@@ -2,6 +2,7 @@
 layout: post
 title: API Stream Java 8 - Parte 1
 source: https://gist.github.com/windoctor/650f566bfcc3617f0913
+overview: Se muestra el uso básico con sencillos ejemplos del nuevo API Stream de Java 8.
 tags:
 - API Stream
 - Java 8
