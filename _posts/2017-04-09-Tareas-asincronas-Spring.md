@@ -105,6 +105,9 @@ spring.mail.username= molder.itp@gmail.com
 spring.mail.password= F0h731183virg@
 {% endhighlight %}
 
+___
+
+## Creando el Controller
 Ahora crearemos un sencillo servicio REST que invocaremos desde nuestro navegador. 
 
 {% highlight java %}
@@ -128,7 +131,14 @@ public class RegistroController {
 
 {% endhighlight %}
 
+Debemos agregar también una dependencia al _build.gradle_
+
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.2.RELEASE'
+
+    
 Podemos observar que el método http usado es GET. Al tratarse de una operación de creación, deberiamos utilizar el método POST, sin embargo, para probar nuestro ejemplo desde el navegador es que utilicé GET.
+
+___
 
 ## Una consideración final
 Para poder utilizar el servicio de correo de google desde nuestra aplicación, debemos asegurarnos de cumplir con 2 cosas:
