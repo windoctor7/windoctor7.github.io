@@ -28,6 +28,10 @@ Para ejemplos con Tapestry
 ## Índice de código
 Se enlista a continuación una pequeña descripción de cada una de las carpetas de código existente y el enlace al tutorial de mi blog que explica su funcionamiento.
 
+{% for post in site.posts %}
+a
+{% endfor %}
+
 
 | Código | Descripción
 |:-:|---|
