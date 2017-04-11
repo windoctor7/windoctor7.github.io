@@ -4,7 +4,7 @@ section-type: post
 title: Tareas asíncronas con Spring
 overview: Este Cookbook simula el registro de un usuario en una base de datos mientras envía correos electrónicos reales en segundo plano usando el servidor SMTP de Google.
 category: cookbook
-tags: [ 'spring boot']
+tags: [ 'spring']
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-async
 ---
 

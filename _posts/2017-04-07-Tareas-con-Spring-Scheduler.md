@@ -4,7 +4,7 @@ section-type: post
 title: Tareas con Spring Scheduler
 overview: Este Cookbook explica como programar tareas que se ejecuten automáticamente usando la anotación @Scheduled de Spring. Una excelente alternativa a Quartz.
 category: CookBook
-tags: [ 'spring-scheduler', 'java', 'spring' ]
+tags: [ 'spring']
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-scheduler
 ---
 

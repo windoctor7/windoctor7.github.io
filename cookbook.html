@@ -31,11 +31,19 @@ title: Blog
                                 {% endcase %}
                             {{ post.date | date: "%Y" }}
                          </h5>
+                         
+                            <h6 style="text-align: right">
+                                {% for tags in post.tags %}
+                                    <span class="label label-primary">
+                                        {{ tags }}
+                                    </span> &nbsp;
+                                {% endfor %}
+                            </h6>                                                  
                      </div>
                      <div class="col-sm-8 col-md-8 col-lg-8">
                          <h5 style="text-align: left">
-                            <strong><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></strong>
-                         </h5>
+                            <strong><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></strong>            
+                         </h5>                         
                          {{post.overview}}
                      </div>
                     <hr />

@@ -4,10 +4,7 @@ title: Servicios REST con Spring Boot
 source: https://github.com/windoctor/SpringBoot-Ejemplos
 category: cookbook
 overview: Video que muestra como desarrollar un sencillo servicio web tipo REST usando Spring Boot.
-tags:
-- Spring Boot
-- Java Web
-- REST
+tags: ['spring']
 ---
 
 [Spring Boot](http://projects.spring.io/spring-boot/){:target="_blank"} es un sub proyecto de [Spring](https://spring.io/){:target="_blank"} que tiene como objetivo facilitar la creación de proyectos Spring, quitándo lo tedioso que resulta la configuración con XML.
