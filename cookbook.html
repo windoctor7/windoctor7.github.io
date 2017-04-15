@@ -30,15 +30,7 @@ title: Blog
                                   {% when '12' %}Diciembre
                                 {% endcase %}
                             {{ post.date | date: "%Y" }}
-                         </h5>
-                         
-                            <h6 style="text-align: right">
-                                {% for tags in post.tags %}
-                                    <span class="label label-primary">
-                                        {{ tags }}
-                                    </span> &nbsp;
-                                {% endfor %}
-                            </h6>                                                  
+                         </h5>                                                
                      </div>
                      <div class="col-sm-8 col-md-8 col-lg-8">
                          <h5 style="text-align: left">
