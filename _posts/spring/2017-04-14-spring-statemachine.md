@@ -3,7 +3,7 @@ layout: post
 section-type: post
 title: Máquina de estados con Spring-statemachine
 overview: En este cookbook modelaremos una sencilla encuesta con máquinas de estados usando el proyecto oficial spring-statemachine.
-category: cookbook
+category: spring
 tags: [ 'spring']
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-state-machine
 ---

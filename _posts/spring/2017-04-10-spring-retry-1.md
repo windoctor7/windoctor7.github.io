@@ -3,7 +3,7 @@ layout: post
 section-type: post
 title: Reintentar ejecución de tareas tras un fallo
 overview: Cuando el envío de un correo electrónico falla ó un servicio web no responde por intermitencias en la red o porque el servidor está caído, es importante tener un sistema preparado para reintentar la operación. En este cookbook veremos como hacer esto con spring-retry.
-category: cookbook
+category: spring
 tags: [ 'spring']
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-retry
 ---

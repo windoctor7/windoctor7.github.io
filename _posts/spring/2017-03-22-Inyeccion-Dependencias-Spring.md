@@ -2,7 +2,7 @@
 layout: post
 section-type: post
 title: Inyección de la dependencia. Primera Parte
-category: Java
+category: spring
 tags: [ 'inyeccion de dependencia', 'pruebas unitarias' ]
 source: https://github.com/windoctor7/inyeccion-dependencia
 ---

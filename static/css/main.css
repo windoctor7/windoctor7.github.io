@@ -1,13 +1,20 @@
 /* Main page with stikky-footer
 -------------------------------------------------- */
 html,
+
 body {
   height: 100%;
   background-color: #fff;
-  font-family: 'Source Sans Pro', sans-serif;
   /* The html and body elements cannot have any padding or margin. */
   border-top: 3px solid #27A822;
+    
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.75em;
+    color: #333;
+    font-weight: 300;
 }
+
 
 
 .relacionados{
@@ -23,8 +30,12 @@ body {
     font-style: italic
 }
 
+
 h2{
-    color: dimgray;
+    color: darkslateblue;
+    font-size: 28px;
+    line-height: 26px;
+    font-weight: 300;
 }
 
 em{
@@ -191,8 +202,6 @@ hr {
 
 .blogpost{
   text-align: left;
-  line-height: 30px;
-  font-size: 18px;
 }
 
 /* Footer 

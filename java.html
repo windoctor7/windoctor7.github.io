@@ -1,15 +1,15 @@
 ---
 layout: layout
-title: Blog
+title: Java
 ---
 
 <div class="container">
-<h3>Cookbook</h3>
+<h3>Cookbook Java</h3>
   <div class="panel panel-default">
     <div class="panel-body">
 		{% for post in site.posts %}
             {% assign categoryDowncase = post.category | downcase %}
-            {% if  categoryDowncase contains 'cookbook' %}
+            {% if  categoryDowncase contains 'java' %}
                 <div class="row">
                      <div class="col-sm-4 col-md-4 col-lg-4">
                          <h5 style="text-align: right">
