@@ -2,7 +2,7 @@
 layout: post
 section-type: post
 title: Spring 5 y la programación reactiva
-category: blog
+category: spring
 overview: Alguna vez has querido ejecutar algún sum, max, min, avg, count sobre colecciones en Java? En este workshop aprenderemos como hacerlo usando el API Stream de Java
 tags: [ 'spring 5', 'spring' ]
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-web-flux
