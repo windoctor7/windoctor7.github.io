@@ -2,48 +2,78 @@
 layout: post
 section-type: post
 title: Server-Sent Event en Spring 4
-overview: En este tutorial ejecutaremos un proceso asíncrono que escriba en un archivo de texto e informe al cliente (navegador) cuando haya concluido. Utilizaremos el API Sent-Server Event de HTML5.
+overview: En este tutorial ejecutaremos un proceso asíncrono que escriba en un archivo de texto e informe al cliente (navegador) cuando haya concluido. Utilizaremos el API Server-Sent Event de HTML5.
 category: spring
 tags: [ 'spring']
-source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-scheduler
+source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/Spring4-SSE
+---
+
 ---
 
 ## Introducción a Server-Sent Event
 
-[Server-Sent Event](https://developer.mozilla.org/es/docs/Server-sent_events/utilizando_server_sent_events_sse) es un API de HTML que permite una comunicación unidireccional con el servidor. Anteriormente usabamos técnicas Ajax como [long-polling](https://es.wikipedia.org/wiki/Tecnología_push#Long_polling) para que cada determinados segundos fuera y preguntara al servidor si tenia nuevos datos. Server-Sent Event permite establecer una conexión al servidor y en lugar que el cliente pregunte al servidor cada determinado tiempo si hay datos nuevos, es el servidor mismo quien le informa al cliente el momento en el que existen datos nuevos para actualizar.
+[Server-Sent Event](https://developer.mozilla.org/es/docs/Server-sent_events/utilizando_server_sent_events_sse) (SSE) es un API de HTML que permite una comunicación unidireccional con el servidor. Anteriormente usabamos técnicas Ajax como [long-polling](https://es.wikipedia.org/wiki/Tecnología_push#Long_polling) para que cada determinados segundos fuera y preguntara al servidor si tenia nuevos datos. Server-Sent Event permite establecer una conexión al servidor y en lugar que el cliente pregunte al servidor cada determinado tiempo si hay datos nuevos, es el servidor mismo quien le informa al cliente el momento en el que existen datos nuevos para actualizar.
 
 El siguiente diagrama muestra la técnica de Long polling 
 
 ![long polling](https://github.com/windoctor7/windoctor7.github.io/raw/master/static/img/long-polling.png)
 
+Hoy en día tenemos mejores técnicas como Websockets o Server-Sent Events. 
 
-Hoy en día tenemos mejores técnicas como websockets o Server-sent Events. En este tutorial aprenderemos el uso de SSE con Spring 4.
-
-Un diagrama que muestra el flujo de comunicación con SSE es el siguiente: 
+En este tutorial aprenderemos el uso de SSE con Spring 4. Un diagrama que muestra el flujo de comunicación con SSE es el siguiente: 
 
 ![sse](https://github.com/windoctor7/windoctor7.github.io/raw/master/static/img/sse.png)
 
 La diferencia de [Long polling vs SSE](https://stackoverflow.com/questions/9397528/server-sent-events-vs-polling), es que este último establece una conexión con el servidor y es el servidor quien notifica al cliente cada que existe un nuevo evento. La comunicación es en una sola dirección, es decir, una vez que el cliente establece una conexión al servidor, ya no es posible enviar más peticiones al servidor usando la misma conexión.
 
+---
+
 ## Server-Sent en Spring
 La nueva versión de Spring 5 trae un mejor y más sencillo soporte para SSE, pero desde Spring 4.2 tenemos soporte para trabajar con la clase [SseEmitter](https://docs.spring.io/spring/docs/4.2.0.RC2_to_4.2.0.RC3/Spring%20Framework%204.2.0.RC3/org/springframework/web/servlet/mvc/method/annotation/SseEmitter.html) la cual es la que ocuparemos en este tutorial.
 
-SseEmitter contiene los siguientes métodos 
+Entre los métodos más importantes de la clase SseEmitter, podemos encontrar los siguientes:
 
-``send(java.lang.Object object)`` Permite enviar el mensaje que deseamos mandar al cliente, normalmente el navegador.
+{% highlight java %}
+// Permite enviar un mensaje al cliente, normalmente el navegador.
+send(java.lang.Object object) 
 
-``onCompletion(java.lang.Runnable callback)`` Permite registrar el código que se ejecutará una vez que el proceso asíncrono concluya.
+// Permite registrar el código que se ejecutará una vez que el proceso asíncrono concluya.
+onCompletion(java.lang.Runnable callback) 
 
-``complete()`` Se debe llamar cuando el proceso haya concluido.
+// Se debe llamar cuando el proceso haya concluido.
+complete() 
 
-``completeWithError(java.lang.Throwable ex)`` Permite registrar un error cuando el proceso haya lanzado una excepción.
+// Permite registrar un error cuando el proceso haya lanzado una excepción.
+completeWithError(java.lang.Throwable ex) 
+{% endhighlight %}
 
-## El ejemplo
+
+Un sencillo ejemplo sería el siguiente controller:
+
+{% highlight java %}
+@RestController
+public class SseController {
+    @GetMapping("/sse")
+    public SseEmitter basico() throws IOException {
+        SseEmitter emitter = new SseEmitter();
+        emitter.send(new Mensaje(1,"Hola Server-Sent Events"));
+        return emitter;
+    }
+}
+{% endhighlight %}
+
+Si ejecutamos el proyecto con bootRun y desde el navegador ingresamos a [http://localhost:8080/sse](http://localhost:8080/sse) podemos ver la siguiente salida:
+
+    data:{"cve":1,"msg":"Hola Server-Sent Events"}
+    
+---
+
+## Un ejemplo más complejo
 Hace poco en el trabajo tuve la necesidad de crear un proceso nocturno que permitiera exportar 18 millones de registros desde una tabla Oracle  a un archivo de texto. Por la cantidad de registros, debía ser un proceso nocturno que se ejecutara automáticamente, esto fue realmente muy sencillo hacerlo con la anotación ``@Scheduled``. Puedes leer un tutorial que escribí sobre [Spring Scheduled](https://windoctor7.github.io/Tareas-con-Spring-Scheduler.html).
 
 Sin embargo, debía crear una sencilla página que permitiera lanzar este y algunos otros procesos de forma manual. El proceso que exporta a un archivo de texto los 18 millones de registros tarda aproximadamente 15 minutos y la idea era notificar a la página web cuando el proceso hubiera finalizado. De aquí partió la necesidad de usar Server-Sent Event.
 
-Primero creamos la clase que se va a encargar de crear el archivo de texto. Esta misma clase será la que esté anotada con @Scheduled y se ejecutará automáticamente.
+Primero creamos la clase que se va a encargar de crear el archivo de texto. Esta misma clase será la que esté anotada con ``@Scheduled`` y se ejecute automáticamente.
 
 {% highlight java %}
 @Component
@@ -84,7 +114,7 @@ public class Spring4SseApplication {
 
 Al correr el proyecto con la tarea bootRun, podemos ver que nuestra tarea inicia su ejecución algunos segundos después y genera un archivo de texto en la ruta indicada.
 
-Sin embargo, como mencioné, la intensión es tener la posibilidad de ejecutar este proceso de forma manual, por lo que deberemos crear un controlador rest que podamos invocar desde una página web.
+Sin embargo, como mencioné, la intensión es tener la posibilidad de ejecutar este proceso de forma manual, por lo que debemos crear un controlador REST que podamos invocar desde una página web.
 
 {% highlight java %}
 @RestController
@@ -108,9 +138,9 @@ Finalmente para ejecutar la tarea desde el navegador, vamos a cambiar la calenda
 
     @Scheduled(cron = "0/15 * * ? * *")
 
-Si ejecutamos nuevamente el proyecto con bootRun y accedemos desde el navegador a [http://localhost:8080/execute](http://localhost:8080/execute) nos daremos cuenta que la tarea de escritura del archivo de texto no es asíncrona, es decir, hasta que el método ``task.generar()`` concluya será cuando recibiremos una respuesta. Claro está que no es la idea.
+Si ejecutamos nuevamente el proyecto con bootRun y accedemos desde el navegador a [http://localhost:8080/execute](http://localhost:8080/execute) nos daremos cuenta que la tarea de escritura del archivo de texto no es asíncrona, es decir, hasta que el método ``task.generar()`` concluya será cuando recibiremos una respuesta.
 
-Para solucionar el problema anterior, deberemos agregar la anotación @Async a nuestro método
+Para solucionar el problema anterior, deberemos agregar la anotación ``@Async`` a nuestro método
 
 {% highlight java %}
 @Component
