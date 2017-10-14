@@ -10,18 +10,27 @@ source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-
 
 ## Introducción a Server-Sent Event
 
-[Server-Sent Event](https://developer.mozilla.org/es/docs/Server-sent_events/utilizando_server_sent_events_sse) es un API de HTML que permite una comunicación unidireccional con el servidor. Anteriormente usabamos técnicas Ajax para que cada determinados segundos fuera y preguntara al servidor si tenia nuevos datos. Server-Sent Event permite establecer una conexión al servidor y en lugar que el cliente pregunte al servidor cada determinado tiempo si hay datos nuevos, es el servidor mismo quien le informa al cliente el momento en el que existen datos nuevos para actualizar.
+[Server-Sent Event](https://developer.mozilla.org/es/docs/Server-sent_events/utilizando_server_sent_events_sse) es un API de HTML que permite una comunicación unidireccional con el servidor. Anteriormente usabamos técnicas Ajax como [long-polling](https://es.wikipedia.org/wiki/Tecnología_push#Long_polling) para que cada determinados segundos fuera y preguntara al servidor si tenia nuevos datos. Server-Sent Event permite establecer una conexión al servidor y en lugar que el cliente pregunte al servidor cada determinado tiempo si hay datos nuevos, es el servidor mismo quien le informa al cliente el momento en el que existen datos nuevos para actualizar.
 
-Un diagrama que muestra el flujo de comunicación es el siguiente: 
+El siguiente diagrama muestra la técnica de Long polling 
+
+![long polling](https://github.com/windoctor7/windoctor7.github.io/raw/master/static/img/long-polling.png)
+
+
+Hoy en día tenemos mejores técnicas como websockets o Server-sent Events. En este tutorial aprenderemos el uso de SSE con Spring 4.
+
+Un diagrama que muestra el flujo de comunicación con SSE es el siguiente: 
 
 ![sse](https://github.com/windoctor7/windoctor7.github.io/raw/master/static/img/sse.png)
+
+La diferencia de [Long polling vs SSE](https://stackoverflow.com/questions/9397528/server-sent-events-vs-polling), es que este último establece una conexión con el servidor y es el servidor quien notifica al cliente cada que existe un nuevo evento. La comunicación es en una sola dirección, es decir, una vez que el cliente establece una conexión al servidor, ya no es posible enviar más peticiones al servidor usando la misma conexión.
 
 ## Server-Sent en Spring
 La nueva versión de Spring 5 trae un mejor y más sencillo soporte para SSE, pero desde Spring 4.2 tenemos soporte para trabajar con la clase [SseEmitter](https://docs.spring.io/spring/docs/4.2.0.RC2_to_4.2.0.RC3/Spring%20Framework%204.2.0.RC3/org/springframework/web/servlet/mvc/method/annotation/SseEmitter.html) la cual es la que ocuparemos en este tutorial.
 
 SseEmitter contiene los siguientes métodos 
 
-``send(java.lang.Object object)`` Permite enviar el mensaje que deseamos lanzar al cliente.
+``send(java.lang.Object object)`` Permite enviar el mensaje que deseamos mandar al cliente, normalmente el navegador.
 
 ``onCompletion(java.lang.Runnable callback)`` Permite registrar el código que se ejecutará una vez que el proceso asíncrono concluya.
 
@@ -32,7 +41,7 @@ SseEmitter contiene los siguientes métodos
 ## El ejemplo
 Hace poco en el trabajo tuve la necesidad de crear un proceso nocturno que permitiera exportar 18 millones de registros desde una tabla Oracle  a un archivo de texto. Por la cantidad de registros, debía ser un proceso nocturno que se ejecutara automáticamente, esto fue realmente muy sencillo hacerlo con la anotación ``@Scheduled``. Puedes leer un tutorial que escribí sobre [Spring Scheduled](https://windoctor7.github.io/Tareas-con-Spring-Scheduler.html).
 
-Sin embargo, debía crear una sencilla página que permitiera lanzar este y otros procesos más de forma manual. El proceso que exporta a un archivo de texto los 18 millones de registros tarda aproximadamente 15 minutos y la idea era notificar a la página web cuando el proceso hubiera finalizado. De aquí partió la necesidad de usar Server-Sent Event.
+Sin embargo, debía crear una sencilla página que permitiera lanzar este y algunos otros procesos de forma manual. El proceso que exporta a un archivo de texto los 18 millones de registros tarda aproximadamente 15 minutos y la idea era notificar a la página web cuando el proceso hubiera finalizado. De aquí partió la necesidad de usar Server-Sent Event.
 
 Primero creamos la clase que se va a encargar de crear el archivo de texto. Esta misma clase será la que esté anotada con @Scheduled y se ejecutará automáticamente.
 
@@ -136,9 +145,9 @@ public class Spring4SseApplication {
 }
 {% endhighlight %}
 
-Puedes ver un tutorial sobre procesos asíncronos en este otro [tutorial que escribí](https://windoctor7.github.io/Tareas-asincronas-Spring.html). 
+Esto permitirá ejecutar al método ``generar()`` en un hilo separado. Puedes ver un tutorial sobre procesos asíncronos en este otro [tutorial que escribí](https://windoctor7.github.io/Tareas-asincronas-Spring.html). 
 
-Si corremos de nueva cuenta el proyecto y accedemos desde el navegador al endpoint /execute veremos que la respuesta ahora es inmediata, sin embargo después de algunos segundos obtenremos un error de timeout en el log de la aplicación. Para establecer un timeout a los procesos asíncronos de nuestra aplicación, debemos agregar la siguiente clase,
+Si corremos de nueva cuenta el proyecto y accedemos desde el navegador al endpoint **/execute** vemos que la respuesta ahora es inmediata, sin embargo después de algunos segundos obtenremos un error de timeout en el log de la aplicación. Para establecer un timeout a los procesos asíncronos de nuestra aplicación, debemos agregar la siguiente clase,
 
 {% highlight java %}
 @Configuration
@@ -151,9 +160,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 }
 {% endhighlight %}
 
-Ya está!... Bueno, claramente el diseño del controller no es bueno, además tenemos el problema que solo podemos ejecutar un método en específico. Que pasaría si queremos diseñar un front con una lista de Jobs a ejecutar? ¿Tendríamos que crear un endpoint para cada job?... La solución es usar algo de reflection.
+Ya está!... Bueno, claramente el diseño del controller no es bueno, además tenemos el problema que solo podemos ejecutar un método en específico. Que pasaría si queremos diseñar un front con una lista de Jobs a ejecutar? ¿Tendríamos que crear un endpoint para cada job?... La solución es usar el [API reflection de Java](http://java-white-box.blogspot.mx/2016/02/api-reflect-que-es-reflexion-por-donde.html).
 
-Vamos a crear una clase que se encargue de ejecutar cualquier método que esté anotado con ``@Scheduled``
+Vamos a crear una clase que se encargue de ejecutar cualquier método que tenga la anotación ``@Scheduled``
 
 {% highlight java %}
 @Component
@@ -201,9 +210,9 @@ public class JobExecutor implements IJobExecutor{
 }
 {% endhighlight %}
 
-``EMITTERS`` será un ConcurrentHashMap donde guardaremos objetos SseEmitter. Dado que nuestro Job escribe en un archivo de texto, es buena idea validar si el Map EMITTERS ya contiene el job ``GenerarArchivo`` y en caso de contenerlo devolver el mensaje.
+``EMITTERS`` será un [ConcurrentHashMap](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ConcurrentHashMap.html) donde guardaremos objetos SseEmitter. Dado que nuestro Job escribe en un archivo de texto, es buena idea validar si el Map EMITTERS ya contiene el job ``GenerarArchivo`` y en caso de contenerlo devolver el mensaje.
 
-El código del Controller sufre modificaciones y ahora debería quedar más o menos como sigue:
+El código del controller sufre modificaciones y ahora debería quedar más o menos como sigue:
 
 {% highlight java %}
 @RestController
@@ -304,5 +313,10 @@ Con lo anterior, cuando el método ``generar()`` concluya publicaremos el evento
 
 El evento será notificado a los lísteners que Spring encuentre anotados con ``@EventListener`` y el objeto que reciba coincida con el enviado en el método publishEvent
 
+Si quieres ver otro ejemplo del uso de Server-Sent Events usando Spring 5, puedes ver este otro [tutorial en mi blog](https://windoctor7.github.io/Spring-Web-Flux.html)
 
+
+## Video demostrativo
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/svfB9Y9O4Ps" frameborder="0" allowfullscreen></iframe>
 
