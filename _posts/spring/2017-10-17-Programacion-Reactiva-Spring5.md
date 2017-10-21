@@ -107,7 +107,7 @@ data:3
 
 .....
 
-```   
+```
 
 Al mismo tiempo, en la consola veremos algo como esto:
 
