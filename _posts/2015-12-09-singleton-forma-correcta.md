@@ -11,7 +11,7 @@ El patrón de diseño Singleton nos permite crear una única instancia de una cl
 
 En dicha página tienen el siguiente código:
 
-{% highlight java %}
+```java
     public  static Configurador getConfigurador(String url,String baseDatos) {
 
          if (miconfigurador==null) {
@@ -19,13 +19,13 @@ En dicha página tienen el siguiente código:
          }
          return miconfigurador;
      }
-{% endhighlight %}
+```
 
 Con lo anterior tenemos el problema que si 2 hilos acceden de forma concurrente al ``miconfigurador=new Configurador(url,baseDatos);``entonces ambos hilos crearán instancias de la clase Configurador. Por lo tanto no es una forma efectiva este diseño de singleton.
 
 Una posible solución sería agregar un synchcronize al método 
 
-{% highlight java %}
+```java
     public  static synchronized Configurador getConfigurador(String url,String baseDatos) {
 
          if (miconfigurador==null) {
@@ -33,7 +33,7 @@ Una posible solución sería agregar un synchcronize al método
          }
          return miconfigurador;
      }
-{% endhighlight %}
+```
   
   de esta forma conseguiriamos una clase "thread safe" ya que al ingresar un hilo al método se conseguirá una zona de exclusión mutua, es decir, cuando un segundo hilo intente acceder al método no podrá puesto que ya hay un hilo adentro. De esta forma aseguramos tener una sola instancia en ambientes concurrentes. Sin embargo, esta solución también presenta un problema y es el "performance".
   
@@ -45,7 +45,7 @@ Una posible solución sería agregar un synchcronize al método
   
   Podríamos encontrar una solución al problema anterior haciendo un [double-checked locking]("https://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java) el cuál se considera un Anti patrón y consiste en hacer una doble comprobación:
   
-  {% highlight java %}
+  ```java
       public  Configurador getConfigurador(String url,String baseDatos) {
 
         if (miconfigurador==null) { //se comprueba 1 vez
@@ -57,7 +57,7 @@ Una posible solución sería agregar un synchcronize al método
         }
         return miconfigurador;
     }
-{% endhighlight %}
+```
 
 Sin embargo como describe la wikipedia, también tenemos algunos inconvenientes con esto.
 
@@ -70,7 +70,7 @@ Pueden ver un ejemplo completo de su implementación [aquí](https://github.com/
 
 Finalmente en el libro [Effective Java](http://www.amazon.com/Effective-Java-Edition-Joshua-Bloch/dp/0321356683) se menciona que la forma más limpia y sencilla de crear un singleton en Java solo a partir de la versión 5 es mediante enums.
 
-{% highlight java %}
+```java
     public enum MiSingleton {
         INSTANCE;
 
@@ -79,5 +79,5 @@ Finalmente en el libro [Effective Java](http://www.amazon.com/Effective-Java-Edi
     
     //La forma de llamarlo sería
     MiSingleton.INSTANCE.miMetodo();
-{% endhighlight %}
+```
 

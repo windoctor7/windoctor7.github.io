@@ -3,7 +3,7 @@ layout: post
 section-type: post
 title: Spring 5 y la programación reactiva
 category: spring
-overview: Alguna vez has querido ejecutar algún sum, max, min, avg, count sobre colecciones en Java? En este workshop aprenderemos como hacerlo usando el API Stream de Java
+overview: Damos un preview a lo que será el módulo de programación reactiva del nuevo Spring 5 desarrollando un sencillo y divertido ejemplo.
 tags: [ 'spring 5', 'spring' ]
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/spring-web-flux
 ---
@@ -28,7 +28,7 @@ Pueden crear el proyecto en [https://start.spring.io](https://start.spring.io) �
 
 Lo único que necesitamos es crear un controller con la ya conocida anotación ``@RestController``
 
-{% highlight java %}
+```java
 @RestController
 public class NumerosController {
 
@@ -38,7 +38,7 @@ public class NumerosController {
                 .delayElements(Duration.ofSeconds(1)).map(n->n);
     }
 }
-{% endhighlight %}
+```
 
 Del código anterior podemos comentar,
 
@@ -52,7 +52,7 @@ Con el código anterior, crearemos una secuencia de elementos de tipo Integer. E
 
 Lo único que necesitamos es crear una página **index.html**
 
-{% highlight html %}
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,7 +79,7 @@ Lo único que necesitamos es crear una página **index.html**
 </script>
 </body>
 </html>
-{% endhighlight %}
+```
 
 Del código anterior podemos comentar que,
 

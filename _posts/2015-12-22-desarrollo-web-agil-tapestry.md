@@ -68,7 +68,7 @@ La estructura de carpetas de nuestro proyecto luce algo así:
 
 Vamos a crear un sencillo formulario que me permita agregar nuevos clientes, así que primero creamos nuestro POJO
 
-{% highlight java %}
+```java
 
     package mx.com.coffeedev.tapestry.entities;
 
@@ -85,18 +85,18 @@ Vamos a crear un sencillo formulario que me permita agregar nuevos clientes, as�
 
     //Crear también los getters y setters con ayuda del IDE
 
-{% endhighlight %}
+```
 
 
 Como observamos en el código anterior, tenemos una referencia a una clase llamada Genero, la cuál es un Enum, así que la creamos.
 
-{% highlight java %}
+```java
     package mx.com.coffeedev.tapestry.data;
 
     public enum Genero {
         MASCULINO, FEMENINO
     }
-{% endhighlight %}
+```
 
 Ahora en la clase Index que se encuentra en el paquete "pages" vamos a agregar un nuevo atributo de clase,
 

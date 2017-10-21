@@ -44,7 +44,7 @@ _spring-statemachine-core_ es el módulo de spring que nos va a permitir trabaja
 
 Creamos una clase llamada CuestionarioEstados que herede de la clase ``EnumStateMachineConfigurerAdapter``, una clase de Spring. Este ejemplo no utiliza Spring Boot con el fin de facilitar el uso de JOptionPane. Al no usar Spring Boot necesitamos indicarle a nuestra clase de configuración los paquetes a donde spring buscará componentes, esto lo hacemos con la anotación ``@ComponentScan``. En este caso indicamos que busque en todo el paquete raíz llamado windoctor7.
 
-{% highlight java %}
+```java
 @Configuration
 @ComponentScan("windoctor7") 
 @EnableStateMachine
@@ -66,25 +66,25 @@ public class CuestionarioEstados extends EnumStateMachineConfigurerAdapter<Estad
     }
     
 }
-{% endhighlight %}
+```
 
 Por los comentarios podemos entender la función de cada uno de los 3 métodos que proporciona ``EnumStateMachineConfigurerAdapter``. Tanto ``Estados``como ``Eventos``se tratan de simples Enums.
 
-{% highlight java %}
+```java
 public enum Estados {
     INICIO, CANDIDATO, FIN
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 public enum Eventos {
     SI, NO
 }
-{% endhighlight %}
+```
 
 Lo primero que haremos es configurar la máquina de estados,
 
-{% highlight java %}
+```java
 @Override
 public void configure(StateMachineConfigurationConfigurer<Estados, Eventos> config) throws Exception {
     config
@@ -92,11 +92,11 @@ public void configure(StateMachineConfigurationConfigurer<Estados, Eventos> conf
         .autoStartup(true) //la máquina de estados se iniciará automáticamente al correr la aplicación
         .listener(listener()); //Un listener (escuchador) que ocurrirá en cada cambio de estado.
 }
-{% endhighlight %}
+```
 
 El listener será un método dentro de la misma clase y será el siguiente,
 
-{% highlight java %}
+```java
 @Bean
 public StateMachineListener<Estados, Eventos> listener() {
     return new StateMachineListenerAdapter<Estados, Eventos>() {
@@ -106,13 +106,13 @@ public StateMachineListener<Estados, Eventos> listener() {
         }
     };
 }
-{% endhighlight %}
+```
 
 El método _stateChanged_ tiene dos argumentos, "from" y "to" que son el estado origen y estado destino respectivamente y el método se ejecutará siempre que ocurra un cambio de estado. En este caso solo imprimiremos el nombre del estado destino.
 
 Lo segundo será indicar a nuestra máquina por cuantos estados estará compuesta,
 
-{% highlight java %}
+```java
 @Override
 public void configure(StateMachineStateConfigurer<Estados, Eventos> states) throws Exception {
     states
@@ -123,13 +123,13 @@ public void configure(StateMachineStateConfigurer<Estados, Eventos> states) thro
 
     ;
 }
-{% endhighlight %}
+```
 
 El estado INICIO es el estado inicial y propiamente un estado. Por ello aparece dos veces. Al definir a INICIO como un estado, observamos que se pasan dos argumentos adicionales al método ``state`` que corresponden a la acción entrante y a la acción de salida, esto quiere decir que es la acción que se ejecutará cada vez que entre al estado INICIO o cada vez que se salga de él. En este caso, se define como null la acción de salida ya que no deseamos ejecutar ninguna acción. Con el método ``states`` que recibe como argumento un ``Set`` de elementos podemos declarar el resto de estados para no tener que hacerlo uno por uno.
 
 El tercer punto es definir las transiciones entre estados,
 
-{% highlight java %}
+```java
 @Override
 public void configure(StateMachineTransitionConfigurer<Estados, Eventos> transitions) throws Exception {
     transitions
@@ -152,14 +152,14 @@ public void configure(StateMachineTransitionConfigurer<Estados, Eventos> transit
             .source(Estados.CANDIDATO).target(Estados.FIN).event(Eventos.NO).action(new FinEncuesta())
     ;
 }
-{% endhighlight %}
+```
 
 Los comentarios en el código tratan de explicar lo que se está codificando. Estamos definiendo como serán las transiciones entre cada estado junto con el evento que las dispara y una acción a realizar cuando ocurra el cambio. Vale la pena detenerse un momento, volver a mirar el diagrama de estados expuesto arriba y compaginarlo con este código para comprender lo que estamos haciendo.
 
 Finalmente solo nos resta definir las acciones. Por simplicidad, las acciones se han definido como clases internas de nuestra clase principal CuestionarioEstados. En ejemplos más complejos, las acciones podrían encontrarse en clases separadas.
 
 
-{% highlight java %}
+```java
 private class PreguntaMayoriaEdad implements Action<Estados, Eventos>{
     @Override
     public void execute(StateContext<Estados, Eventos> context) {
@@ -190,7 +190,7 @@ private class FinEncuesta implements Action<Estados, Eventos>{
         }
     }
 }
-{% endhighlight %}
+```
 
 El código es muy simple y se explica casi por si solo, pero vale la pena mencionar la acción FinEncuesta. Esta acción tiene lugar cuando se pasa al estado FIN y aquí se puede procesar la petición del usuario, por ejemplo se podrían llamar a los componentes que se encargan de guardar alguna transacción en la base de datos.
 
@@ -200,13 +200,13 @@ El único estado donde se ejecuta la acción FinEncuesta es en el estado FIN y s
 
 Para ejecutar el ejemplo solo definimos una clase Main en donde lanzamos el contexto de Spring indicando la clase de configuración, que en este caso es nuestra clase CuestionarioEstados que es en donde configuramos a nuestra máquina de estados.
 
-{% highlight java %}
+```java
 public class Main {
     public static void main(String[] args) {
         new AnnotationConfigApplicationContext(CuestionarioEstados.class);
     }
 }
-{% endhighlight %}
+```
 
 Sin duda este ejemplo pudo resolverse con unos cuantos if's de manera más simple, sin embargo lo que intentamos aquí es dar una introducción a este proyecto que sin duda alguna para ejemplos más complejos que dos preguntas resulta de gran ayuda.
 

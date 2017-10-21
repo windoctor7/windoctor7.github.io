@@ -14,7 +14,7 @@ A partir de la versión Java 8 se incluye un interesante API para realizar filtr
 
 Primero que nada veamos el uso de lambdas para iterar e imprimir una lista de objetos de tipo Cancion (no pierdas de vista la lista canciones ya que la ocuparemos a lo largo del tutorial)
 
-{% highlight java %}
+```java
 	List<Cancion> canciones = new ArrayList<>(Arrays.asList(
 		new Cancion("Te Equivocas", "Jon Carlo"),
 		new Cancion("Solo tu", "Orlando Elizalde"),
@@ -34,7 +34,7 @@ Primero que nada veamos el uso de lambdas para iterar e imprimir una lista de ob
 	
 	//Uso de lambdas en Java 8
 	canciones.forEach( c -> System.out.println("Java 8: "+c));
-{% endhighlight %}
+```
 
 <p class="codigo">
 Listado 1
@@ -51,7 +51,7 @@ El método [forEach](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterabl
 Si de la lista anterior deseamos obtener todas las canciones cuyo cantante sea "Jon Carlo", en versiones anteriores a Java 8 tendríamos que iterar cada elemento comparando el nombre del cantante y de ser el que buscamos lo agregaríamos a otra lista para devolverla al final.
 
 
-{% highlight java %}
+```java
 for(Cancion cancion : filtrarCantanteJava7(canciones, "Jon Carlo")){
 	System.out.println("Java 7: "+cancion);
 }
@@ -64,7 +64,7 @@ public List<Cancion> filtrarCantanteJava7(List<Cancion> canciones, String cantan
 	}
 	return listaFiltrada;
 }	
-{% endhighlight %}
+```
 
 <p class="codigo">
 Listado 2
@@ -73,7 +73,7 @@ Listado 2
 A partir de Java 8, simplemente tendríamos que obtener un objeto [Stream](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html), aplicar un filtro mediante el método "*filter*" y finalmente cerrar el proceso devolviendo el resultado en un List mediante `.collect(Collectors.toList())`
 
 
-{% highlight java %}
+```java
 List<Cancion> listadoCanciones = filtrarCantanteJava8(canciones,"Jon Carlo");
 listadoCanciones.forEach(c -> System.out.println("Java 8: "+c));
 
@@ -82,7 +82,7 @@ public List<Cancion> filtrarCantanteJava8(List<Cancion> canciones, String cantan
 	                .filter(c -> c.getCantante().equals(cantante))
 	                .collect(Collectors.toList());
 }
-{% endhighlight %}
+```
 <p class="codigo">
 Listado 3
 </p>
@@ -93,7 +93,7 @@ Listado 3
 Una vez aplicado el filtro, quizá queremos obtener el nombre de los cantantes en mayúscula! Invocando al método map, nuestro código ahora queda de esta forma:
 
 
-{% highlight java %}
+```java
 public List<Cancion> filtrarCantanteJava8(List<Cancion> canciones, 												String cantante){
 	return canciones.stream()
 	.filter(c -> c.getCantante().equals(cantante))
@@ -104,7 +104,7 @@ public List<Cancion> filtrarCantanteJava8(List<Cancion> canciones, 												S
 	)
 	.collect(Collectors.toList());
 } 
-{% endhighlight %}
+```
 
 <p class="codigo">
 Listado 4
@@ -115,14 +115,14 @@ En el método map podemos mapear el resultado según nuestra conveniencia. El m�
 ¿Y si solo queremos recuperar el nombre de las canciones en lugar de todo el objeto Canción? Fácil...
 
 
-{% highlight java %}
+```java
 public List<String> obtenerCancionesPorCantanteJava8(List<Cancion> canciones, String cantante){
 	return canciones.stream()
 		.filter(c -> c.getCantante().equals(cantante))
 		.map(c -> c.getNombre().toUpperCase())
 		.collect(Collectors.toList());
 }
-{% endhighlight %}
+```
 
 <p class="codigo">
 Listado 5
@@ -133,12 +133,12 @@ Aquí el tipo del Stream es un String y no es necesario agregar un `return`como 
 ### Quitando duplicados
 Mediante el método distinct podemos quitar elementos duplicados de nuestra lista. Vamos a agregar una canción que ya existe en la lista de canciones y después aplicaremos el método distinct
 
-{% highlight java %}
+```java
 //Esta canción ya existe pero la agregaremos nuevamente
 canciones.add(new Cancion("Siempre te amare", "Darwin Lechler"));
 // aplicamos el distinct
 canciones.stream().distinct().collect(Collectors.toList()).forEach( System.out::println);
-{% endhighlight %}
+```
 <p class="codigo">
 Listado 6
 </p>
@@ -148,12 +148,12 @@ Al ejecutar el código anterior, podremos ver que efectivamente evitamos element
 ### Contando elementos
 ¿Y si queremos saber cuántas canciones tiene un determinado cantante? Muy fácil, aplicamos el filtro y después invocamos al método count.
 
-{% highlight java %}
+```java
 long count = canciones.stream()
 	.filter(c -> c.getCantante().equalsIgnoreCase("Jon Carlo"))
 	.count();
 System.out.println("Jon Carlo aparece: "+count+" veces");
-{% endhighlight %}
+```
 <p class="codigo">
 Listado 7
 </p>
@@ -161,14 +161,14 @@ Listado 7
 ### Agrupando canciones por Cantante
 Como seguro te has dado cuenta, el concepto es como las consultas SQL y para que tenga aún más similitud, vamos a agrupar el número de canciones por cantante, es decir, vamos a saber cuántas canciones tiene cada cantante
 
-{% highlight java %}
+```java
 Map<String, Long> counted = canciones.stream().collect(
 	Collectors.groupingBy( 
 		c -> c.getCantante(), Collectors.counting()
 	)
 );
 System.out.println(counted);
-{% endhighlight %}
+```
 <p class="codigo">
 Listado 8
 </p>

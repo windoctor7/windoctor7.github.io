@@ -37,11 +37,11 @@ Si ya tienes el proyecto importado en tu IDE favorito, puedes comenzar el worksh
 ## 2. Interfaz Stream
 La clave de todo es la interfaz [Stream](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html). En español la palabra Stream quiere decir **flujo** o **secuencia** y según la documentación oficial de Java, la interfaz Stream representa una secuencia de elementos, pero ¿qué clase de elementos?, elementos del tipo que indiquemos. La interfaz Stream es genérica, por lo tanto para recuperar un stream de nuestros productos podemos hacer esto,
 
-{% highlight java %}
+```java
 Stream<Product> productStream = products.stream(); //flujo de elementos Product
 productStream.forEach(product -> System.out.println(product)); // imprime la lista de productos
 // productStream.forEach(System.out::println); esta linea es equivalente a la anterior
-{% endhighlight %}
+```
 
 En este workshop realizaremos algunas operaciones que aplicamos comúnmente a una base de datos relacional usando sql, pero las haremos sobre listas en Java usando Stream, por lo tanto a continuación te presento una tabla donde se muestran algunos métodos de la interfaz``Stream`` junto a una posible equivalencia en sql. No te detengas mucho en revisarla, mejor regresa a ella conforme vayas teniendo dudas a lo largo de este workshop.
 
@@ -64,18 +64,18 @@ En este workshop realizaremos algunas operaciones que aplicamos comúnmente a un
 
 Considera la siguiente consulta **sql**,
 
-{% highlight sql %}
+```sql
     select name from products
-{% endhighlight %}
+```
 
 El equivalente usando Java **Streams** es,
 
-{% highlight java %}
+```java
 List<Product> products;
 ...
 Stream<String> streams = products.stream().map(Product::getName);
 
-{% endhighlight %}
+```
 
 - Con el método ``stream()`` obtenemos una secuencia de elementos de tipo ``Product``. Este es el **from**. 
 - Con el método ``map`` recuperamos solo el atributo _name_. Este es el **select**.
@@ -90,24 +90,24 @@ El punto clave es obtener un Stream mediante el método ``stream()`` y a partir 
 >Recuperar los nombres de productos que tengan una existencia en el almacen menor a 10 unidades.
 
 En **sql**,
-{% highlight sql %}
+```sql
    select name from products where units_in_stock < 10
-{% endhighlight %}
+```
 
 Con Java **Streams**, 
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream().filter(p -> p.getUnitsInStock()<10).map(Product::getName);
 streams.forEach(product -> System.out.println(product)); //imprime el resultado en consola
-{% endhighlight %}
+```
 
 
 Es importante notar el órden en el que aparecen los métodos, primero se encuentra filter y después map. ¿Qué ocurre si colocamos primero a map y luego a filter?
 
-{% highlight java %}
+```java
 //ERROR DE COMPILACION
 Stream<String> streams = products.stream().map(Product::getName).filter(p -> p.getUnitsInStock()<10);
-{% endhighlight %}
+```
 
 Obtendremos un error de compilación. ¿Por qué? Porque el método map devuelve el nombre del producto que es un String y la clase String no tiene un método que se llame filter.
 
@@ -115,7 +115,7 @@ El método ``filter()`` recibe un predicado. Un predicado es solo una función q
 
 Si nuestra lógica es más compleja podemos considerar usar un método en lugar de lamdas.
 
-{% highlight java %}
+```java
 ...
 Stream<String> streams = products.stream()
                             .filter(predicado()) //invocamos a un método de predicado
@@ -131,7 +131,7 @@ public Predicate<Product> predicado(){
         }
     };
 }
-{% endhighlight %}
+```
 
 ---
 
@@ -140,20 +140,20 @@ public Predicate<Product> predicado(){
 
 En **sql**
 
-{% highlight sql %}
+```sql
    select name from products where units_in_stock < 10
    order by units_in_stock asc
-{% endhighlight %}
+```
 
 Con Java **Streams**
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
                 .filter(p -> p.getUnitsInStock()<10)
                 .sorted(Comparator.comparingDouble(Product::getUnitsInStock))
                 .map(Product::getName)
                 ;
-{% endhighlight %}
+```
 
 El método ``sorted`` recibe un ``Comparator``. Ésta misma interfaz ``Comparator`` tiene algunos métodos que nos serán de gran ayuda
 
@@ -166,18 +166,18 @@ Lo mejor será revisar la documentación de la interfaz [Comparator](https://doc
 
 Si deseamos ordenar en forma descendente necesitamos aplicar un reverso,
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
                 .filter(p -> p.getUnitsInStock()<10)
                 .sorted(Comparator.comparingDouble(Product::getUnitsInStock).reversed())
                 .map(Product::getName)
                 ;
-{% endhighlight %}
+```
 
 
 Otra forma diferente de ordenar, es que nuestra clase Product implemente a la interfaz ``Comparable``
 
-{% highlight java %}
+```java
 public class Product implements Comparable<Product>{
     ...
     // atributos, setters/getters
@@ -193,40 +193,40 @@ public class Product implements Comparable<Product>{
             return 0;
     }
 }
-{% endhighlight %}
+```
 
 Ahora al método ``sorted()`` es invocado sin argumentos,
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
         .filter(p -> p.getUnitsInStock()<10)
         .sorted()
         .map(Product::getName)
         ;
-{% endhighlight %}
+```
 
 ¿Cómo ordenamos en forma descendente? Usando Comparator.reverseOrder()
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
         .filter(p -> p.getUnitsInStock()<10)
         .sorted(Comparator.reverseOrder())
         .map(Product::getName)
         ;
-{% endhighlight %}
+```
 
 ¿Y si queremos ordenar por unitsInStock de forma descendente y por nombre de producto de forma ascendente?
 
 En **sql**,
 
-{% highlight sql %}
+```sql
 select productName, unitsInStock from products
 where unitsInStock < 10
 order by unitsInStock desc, productName asc;
-{% endhighlight %}
+```
 
 Con Java **Streams**
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
         .filter(p -> p.getUnitsInStock()<10)
         .sorted(
@@ -237,21 +237,21 @@ Stream<String> streams = products.stream()
         )
         .map(Product::getName)
         ;
-{% endhighlight %}
+```
 
 Y si ahora queremos invertir las cosas y ordenar por unitsInStock de forma ascendente y por nombre de forma descendente? 
 
 En **sql**,
 
-{% highlight sql %}
+```sql
 select productName, unitsInStock from products
 where unitsInStock < 10
 order by unitsInStock asc, productName desc;
-{% endhighlight %}
+```
 
 Con Java Streams podríamos pensar en solo cambiar la posición del método ``reversed()``
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
         .filter(p -> p.getUnitsInStock()<10)
         .sorted(
@@ -263,13 +263,13 @@ Stream<String> streams = products.stream()
         )
         .map(Product::getName)
         ;
-{% endhighlight %}
+```
 
 Sin embargo esto no es correcto ya que estamos ordenando de forma descendente por ámbos atributos, unitsInStock y name. 
 
 La forma correcta es aplicar el reverse sólo al campo **name**,
 
-{% highlight java %}
+```java
 Stream<String> streams = products.stream()
         .filter(p -> p.getUnitsInStock()<10)
         .sorted(
@@ -283,7 +283,7 @@ Stream<String> streams = products.stream()
         )
         .map(Product::getName)
         ;
-{% endhighlight %}
+```
 
 Hasta este punto podemos resumir lo siguiente:
 
@@ -301,14 +301,14 @@ En Java, se especifican en el método ``collect``
 
 En **sql**,
 
-{% highlight sql %}
+```sql
 Select count(1), supplierID from products
 GROUP BY  supplierID
-{% endhighlight %}
+```
 
 Con Java **Streams**,
 
-{% highlight java %}
+```java
 Map<Integer, Long> collect = products.stream()
         .collect( //en el metodo collect se especifican las funciones de agregacion
                 Collectors.groupingBy( // deseamos agrupar
@@ -326,13 +326,13 @@ collect.forEach((s, c) -> System.out.printf("proveedor: %s: productos: %s \n", s
 // proveedor: 5: productos: 2 
 ....
 ....
-{% endhighlight %}
+```
 
 Dado que en el método ``collect`` especificamos funciones de agregado, casi siempre nos auxiliaremos de la clase ``Collectors`` la cuál nos proporciona varios métodos de funciones de agregado. En este ejemplo, usamos el método ``groupingBy``
 
 Si deseamos filtrar todos los productos que en almacen tengan menos de 20 unidades de existencia y agrupados por existencia,
 
-{% highlight java %}
+```java
 Map<Integer, List<Product>> collect = products.stream()
         .filter(p -> p.getUnitsInStock() < 20)
         .collect(Collectors.groupingBy(Product::getUnitsInStock));
@@ -344,7 +344,7 @@ collect.forEach((unidades, producto) -> System.out.printf("existencias: %s Produ
 // existencias: 3 Productos: [Product{id=21, name='Sir Rodney's Scones'....}] 
 ...
 ...
-{% endhighlight %}
+```
 
 
 ## 7. Sumas
@@ -353,14 +353,14 @@ collect.forEach((unidades, producto) -> System.out.printf("existencias: %s Produ
 
 En **sql**,
 
-{% highlight sql %}
+```sql
 Select  unitsInStock, sum(unitPrice) from products
 GROUP BY unitsInStock
-{% endhighlight %}
+```
 
 Con Java **Streams**,
 
-{% highlight java %}
+```java
 Map<Integer, Double> collect = products.stream()
         .collect( //en el metodo collect se especifican las funciones de agregacion
                 Collectors.groupingBy( // deseamos agrupar
@@ -380,7 +380,7 @@ collect.forEach((stock, suma) -> System.out.printf("en stock: %s: suma: %s \n", 
 // en stock: 6: suma: 12.5 
 ...
 ...
-{% endhighlight %}
+```
 
 ## 8. Having
 Tomando el ejemplo anterior, le agregaremos algo más,
@@ -389,15 +389,15 @@ Tomando el ejemplo anterior, le agregaremos algo más,
 
 En **sql**,
 
-{% highlight sql %}
+```sql
 Select  unitsInStock, sum(unitPrice) from products
 GROUP BY unitsInStock
 HAVING sum(unitPrice) > 100
-{% endhighlight %}
+```
 
 Con Java **Streams**,
 
-{% highlight java %}
+```java
 List<Map.Entry<Integer, Double>> entryList = products.stream()
         .collect( //en el metodo collect se especifican las funciones de agregacion
                 Collectors.groupingBy( // deseamos agrupar
@@ -418,48 +418,48 @@ entryList.forEach(list -> System.out.printf("en stock: %s, suma: %s\n",list.getK
 // en stock: 26, suma: 117.1
 // en stock: 29, suma: 114.45
 
-{% endhighlight %}
+```
 
 ## 9. Más operaciones
 
 Promedio de existencias en almacen
 
-{% highlight java %}
+```java
 Double average = products.stream()
                 .collect(Collectors.averagingInt(Product::getUnitsInStock));
 System.out.printf("Promedio de existencias en almacen: %s",average );
 
 // Promedio de existencias en almacen: 40.54545454545455
-{% endhighlight %}
+```
 
 Producto con el precio unitario más alto
 
-{% highlight java %}
+```java
 Optional<Product> product = products.stream().max(Comparator.comparing(Product::getUnitPrice));
 System.out.println(product.get());
 
 // Product{id=38, name='Côte de Blaye', supplier=18, category=1, unitPrice=263.5, unitsInStock=17}
-{% endhighlight %}
+```
 
 Podemos obtener el **count, sum, min, max** y **average** con una sola operación. Por ejemplo si queremos obtener estas estadísticas respecto al precio unitario
 
-{% highlight java %}
+```java
 DoubleSummaryStatistics statistics =
                 products.stream().collect(Collectors.summarizingDouble(Product::getUnitPrice));
 
 System.out.println(statistics);
 
 // DoubleSummaryStatistics{count=77, sum=2222.710000, min=2.500000, average=28.866364, max=263.500000}
-{% endhighlight %}
+```
 
 Limitar el numero de productos devueltos
 
-{% highlight java %}
+```java
 products.stream().limit(50); // limitamos a 50 productos
-{% endhighlight %}
+```
 
 Saltar hasta el elemento indicado y a partir de ahí devolver todos los elementos
-{% highlight java %}
+```java
 Stream<Product> skip = products.stream().skip(5); //obtenemos los productos a partir del 6 (inclusive)
 skip.forEach(System.out::println);
 
@@ -467,7 +467,7 @@ skip.forEach(System.out::println);
 // Product{id=7, name='Uncle Bob's Organic Dried Pears', supplier=3, category=7...}
 // Product{id=8, name='Northwoods Cranberry Sauce', supplier=3, category=2...}
 // ...
-{% endhighlight %}
+```
 
 ## 10. Resumen
 Hemos visto como a partir de Java 8 podemos ejecutar sobre colecciones potentes operaciones de agregación como en SQL. Para mejor comprensión debes escribir estos ejemplos tu mismo y ver los resultados. Si lo deseas incluso puedes cargar el archivo csv a una base de datos relacional para comprobar los resultados.

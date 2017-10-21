@@ -33,17 +33,17 @@ Un método anotado con [``@Async``](http://docs.spring.io/spring-framework/docs/
 
 Para habilitar el soporte de tareas asíncronas necesitamos agregar la anotación [``@EnableAsync``](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html) a la clase principal de Spring Boot.
 
-{% highlight java %}
+```java
     @SpringBootApplication
     @EnableAsync
     public class SpringAsyncApplication
-{% endhighlight %}
+```
 
 Ahora vamos a crear el servicio que nos va a permitir simular el registro de un usuario en una base de datos y posteriormente enviaremos un correo real mediante el SMTP de Gmail.
 
 El servicio quedaría de la siguiente forma,
 
-{% highlight java %}
+```java
 @Service
 public class RegistroAsync {
 
@@ -84,13 +84,13 @@ public class RegistroAsync {
         }
     }
 }
-{% endhighlight %}
+```
 
 Podemos ver que el método _enviarCorreo_ está marcado con la anotación [``@Async``](http://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/Async.html), esto le permitirá ejecutarse de manera asíncrona. Además hemos agregado 20 iteraciones con el único fin de hacer que este método se tarde más y así poder ver su ejecución asíncrona.
 
 Ahora debemos configurar los datos del servidor de correos. Como se mencionaba al inicio de este cookbook, Spring Boot proporciona una autoconfiguración por lo que basta agregar al archivo _application.properties_ los parámetros del servidor SMTP.
 
-{% highlight properties %}
+```properties
 # El servidor SMTP de gmail. El puerto 465 es el puerto seguro de gmail.
 spring.mail.host=smtp.gmail.com
 spring.mail.port= 465
@@ -103,14 +103,14 @@ spring.mail.username= molder.itp@gmail.com
 
 # aqui pon tu contraseña de tu cuenta de correo gmail
 spring.mail.password= F0h731183virg@
-{% endhighlight %}
+```
 
 ___
 
 ## Creando el Controller
 Ahora crearemos un sencillo servicio REST que invocaremos desde nuestro navegador. 
 
-{% highlight java %}
+```java
 @RestController
 @RequestMapping("/registro")
 public class RegistroController {
@@ -129,7 +129,7 @@ public class RegistroController {
     }
 }
 
-{% endhighlight %}
+```
 
 Debemos agregar también una dependencia al _build.gradle_
 

@@ -33,7 +33,7 @@ O en Windows
     
 Sin embargo para este cookbook crearemos un servicio nuevo y será muy sencillo,
 
-{% highlight java %}
+```java
 @RestController
 @RequestMapping("/empleados")
 public class ConsultaController {
@@ -50,13 +50,13 @@ public class ConsultaController {
     }
 
 }
-{% endhighlight %}
+```
 
 Como podemos ver se trata de un servicio GET que devuelve la información en formato JSON de un empleado determinado.
 
 La clase ``Empleado``consta solo de dos atributos.
 
-{% highlight java %}
+```java
 public class Empleado {
 
     public int id;
@@ -79,7 +79,7 @@ public class Empleado {
     }
 }
 
-{% endhighlight %}
+```
 
 ## Consumiendo el servicio web
 
@@ -92,7 +92,7 @@ Vamos a necesitar crear otro proyecto spring boot para el cliente que va a consu
 
 Creamos una clase que implemente la interfaz [``CommandLineRunner``](http://nixmash.com/post/using-spring-boot-commandlinerunner) 
 
-{% highlight java %}
+```java
 @Service
 public class ClienteRest implements CommandLineRunner {
 
@@ -109,7 +109,7 @@ public class ClienteRest implements CommandLineRunner {
         System.out.println(empleado);
     }
 }
-{% endhighlight %}
+```
 
 Si no sabes que es CommandLineRunner no te preocupes, no tiene nada que ver con este ejemplo. CommandLineRunner nos permite ejecutar el código automáticamente al correr la aplicación.
 
@@ -140,7 +140,7 @@ Notamos que también usamos la clase Empleado, por lo que en este proyecto tambi
 ## Habilitando el soporte para @Retryable
 En nuestra clase ClienteRest que definimos arriba, hemos usado la anotación @Retryable. Para que Spring la pueda tomar en cuenta, debemos indicarlo agregando @EnableRetry en la clase de configuración principal de Spring Boot.
 
-{% highlight java %}
+```java
 @SpringBootApplication
 @EnableRetry
 public class SpringRetryTestApplication {
@@ -150,7 +150,7 @@ public class SpringRetryTestApplication {
 	}
 
 }
-{% endhighlight %}
+```
 
 ## Ejecutando el ejemplo
 Ya tenemos todo para ver el funcionamiento y lo primero es ejecutar el proyecto del servicio web REST .
@@ -189,16 +189,16 @@ Dado que el servicio web no está corriendo, al invocarlo se obtiene una excepci
 ## Consideración final
 Podemos definir una política de recuperación, es decir, si después de los reintentos sigue siendo imposible ejecutar el servicio. Basta con definir un método y anotarlo con ``@Recover```
 
-{% highlight java %}
+```java
     @Recover
     public void recover(){
         System.out.println("Aqui el código que deseamos ejecutar en caso que la política de reintentos falle");
     }
-{% endhighlight %}
+```
 
 Al método anotado con recover podemos agregar como parámetro la excepción que causó los reintentos y si nuestro método de reintento tiene parámetros también podemos agregarlos al método de recuperacion. El siguiente fragmento de la página de github del proyecto [spring-retry](https://github.com/spring-projects/spring-retry) es muy clarificador.
 
-{% highlight java %}
+```java
 @Service
 class Service {
     @Retryable(RemoteAccessException.class)
@@ -210,7 +210,7 @@ class Service {
        // ... Manejo de errores, haciendo uso de los parametros originales si son necesarios.
     }
 }
-{% endhighlight %}
+```
 
 Lamentablemente nosotros no podemos ver esto pues al utilizar la interfaz CommandLineRunner, si en el método run(String… args) se lanza una excepción, causará que el [contexto de spring se cierre](http://howtodoinjava.com/spring/spring-boot/command-line-runner-interface-example/) y nuestra aplicación se detendrá, ocasionando que el método recover no se ejecute. Para que una aplicación que usa CommandLineRunner no se termine en el caso de lanzar una excepción en el método run(..) será necesario agregar un bloque try/catch sin embargo si lo hacemos la excepción no se lanzará un nuestra política de reintentos no se ejecutará sencillamente porque no habrá detectado ninguna excepción. Sin embargo esto no es ningun problema, en una aplicación real no usarás CommandLineRunner, aquí se uso solo para fines demostrativos y rápidos.
 

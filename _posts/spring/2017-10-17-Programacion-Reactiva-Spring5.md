@@ -45,9 +45,9 @@ Vamos a hacer un pequeño ejemplo para reforzar los conceptos aprendidos hasta e
 
 Publicaremos un rango de números del 1 al 30.
 
-{% highlight java %}
+```java
 Flux<Integer> flux = Flux.range(1,30)
-{% endhighlight %}
+```
 
 Lo anterior es nuestro Publisher que emitira un flujo de números. Podemos ver a este flujo de elementos numéricos de la siguiente manera:
 
@@ -61,26 +61,26 @@ La flecha sobre la que se encuentran los números es la línea de tiempo sobre l
 
 Para poder visualizar el cambio de elementos, le indicaremos al Publisher que emita un número cada segundo:    
 
-{% highlight java %}
+```java
 Flux<Integer> flux = Flux.range(1,30).delayElements(Duration.ofSeconds(1));
-{% endhighlight %}
+```
     
 En este punto, ya tenemos un Publisher que es nuestra clase Flux que emite objetos Integer. Veamos ahora la parte de los Subscribers creando la siguiente clase:
 
-{% highlight java %}
+```java
 public class Subscriber {
 
     public static void multiplicar(Integer n)  {
         System.out.println("Subscriber2: "+n*n);
     }
 }
-{% endhighlight %}
+```
 
 Esta clase es muy sencilla, simplemente tenemos un método ``multiplicar`` que espera recibir un entero y multiplicarlo por si mismo e imprimir el resultado en consola.
 
 Finalmente creamos un RestController a donde crearemos el Publisher visto anteriormente y le indicaremos sus suscriptores a quien les deberá notificar cuando haya nuevos elementos:
 
-{% highlight java %}
+```java
 @RestController
 public class NumerosController {
 
@@ -94,7 +94,7 @@ public class NumerosController {
         return flux; // retornamos el elemento. Sería como el suscriptor 3
     }
 }
-{% endhighlight %}
+```
 
 Si ejecutamos el proyecto con bootRun y accedemos a la dirección [http://localhost:8080/numeros](http://localhost:8080/numeros) veremos en el navegador la siguiente salida:
 
@@ -121,7 +121,7 @@ Al mismo tiempo, en la consola veremos algo como esto:
 
 Una de las características de las aplicaciones reactivas es que son no bloqueantes, son asíncronas. Para entender a lo que me refiero, modifiquemos el método ``multiplicar()`` y agreguemos un retardo de 5 segundos.
 
-{% highlight java %}
+```java
     public static void multiplicar(Integer n)  {
         try {
             Thread.sleep(5000);
@@ -130,7 +130,7 @@ Una de las características de las aplicaciones reactivas es que son no bloquean
         }
         System.out.println("Subscriber2: "+n*n);
     }
-{% endhighlight %}
+```
 
 
 Al ejecutar de nueva cuenta el proyecto, la salida en la consola es similar a esto:
@@ -153,10 +153,10 @@ Podemos ver que pese a que hay un ``Thread.sleep(5000)`` el resto de los suscrip
 
 En una aplicación tradicional, podríamos verlo como la ejecución de estas 2 líneas de código:
 
-{% highlight java %}
+```java
 Subscriber.multiplicar(numero);
 System.out.println(numero);
-{% endhighlight %}
+```
 
 El método multiplicar bloquearía el hilo principal cada 5 segundos, dando como resultado que el ``println`` de abajo no se ejecute hasta que el hilo principal que está usando el método multiplicar sea liberado.
 
@@ -183,12 +183,12 @@ A nuestra secuencia de números del 1 al 30, deseamos aplicarle un filtro para s
 
 El código reactivo quedaría de la siguiente forma:
 
-{% highlight java %}
+```java
 Flux<Integer> flux = Flux.range(1,30)
         .delayElements(Duration.ofSeconds(1))
         .filter(n -> n % 2 == 0) // solo números divisibles entre 2
         .map(n -> n*2); // a cada elemento que ha sido filtrado, lo multiplicamos por 2
-{% endhighlight %}
+```
 
 Si ejecutamos el proyecto con este cambio, al ingresar a [http://localhost:8080/numeros](http://localhost:8080/numeros) obtendremos la siguiente secuencia de números: 4,8,12,16,20... que corresponden con los números 2,4,6,8,10... que fueron filtrados y después multiplicados por 2.
 
@@ -225,7 +225,7 @@ Antes de empezar con el ejemplo, debes cargar a mongo algunos datos. Puedes obte
 
 Creamos el POJO a donde mapearemos los campos con los de la colección "students" de mongo.
 
-{% highlight java %}
+```java
 @Document(collection = "students")
 public class Student {
 
@@ -235,7 +235,7 @@ public class Student {
 
     //SETTERS y GETTERS
 }
-{% endhighlight %}
+```
 
 ---
 
@@ -247,10 +247,10 @@ Por lo tanto, será en la base de datos **test** donde deberás cargar la inform
 
 También debemos creamos un repositorio Spring Data, pero lo haremos con soporte reactivo mediante la interfaz [ReactiveCrudRepository](https://docs.spring.io/spring-data/data-commons/docs/2.0.0.M3/api//org/springframework/data/repository/reactive/ReactiveCrudRepository.html)
 
-{% highlight java %}
+```java
 public interface StudentReactiveRepository extends ReactiveCrudRepository<Student,String>{
 }
-{% endhighlight %}
+```
 
 [Si no conoces de Spring Data, puedes leer [la documentación oficial](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories) para que comprendas como una interfaz hereda de otra interfaz y sin mayor código obtendremos datos desde mongo :D]
 
@@ -260,7 +260,7 @@ public interface StudentReactiveRepository extends ReactiveCrudRepository<Studen
 
 Primero veamos el Modo full el cuál se ejecutará si no hay definido un límite del tamaño del chunk y tampoco alguna variable de contexto data-driver. Teniendo en mente lo anterior, el siguiente Controller mandará al template los datos de un solo golpe.
 
-{% highlight java %}
+```java
 @Controller
 public class StudentListController {
 
@@ -275,13 +275,13 @@ public class StudentListController {
         return "students"; // direccionamos al students.html
     }
 }
-{% endhighlight %}
+```
 
 Finalmente bajo la ruta **/resources/templates** crearemos el siguiente html,
 
 **students.html**
 
-{% highlight html %}
+```html
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -304,7 +304,7 @@ Finalmente bajo la ruta **/resources/templates** crearemos el siguiente html,
 </table>
 </body>
 </html>
-{% endhighlight %}
+```
 
 
 Si ejecutamos el proyecto y accedemos desde nuestro navegador a [http://localhost:8080/list-students](http://localhost:8080/list-students) veremos que la página tarda varios segundos en responder. Esto es porque aunque la obtención de datos desde MongoDB se hace de forma reactiva, el envío que hacemos al cliente no lo es tanto. El modo Full toma todo el flujo de información y  lo envía al template en un solo fragmento.
@@ -334,7 +334,7 @@ Podemos ver la diferencia en los tiempos de ejecución respecto al modo FULL.
 ## Thymeleaf: Modo DATA-DRIVEN
 Como mencionamos anteriormente, el modo DATA-DRIVEN se ejecutará si se agrega una variable de contexto IReactiveDataDriverContextVariable en el modelo.La clase ReactiveDataDriverContextVariable nos permite agregar esta variable:
 
-{% highlight java %}
+```java
 @GetMapping("/list-students-reactive")
 public String listUsersReactive(Model model)
 {
@@ -342,7 +342,7 @@ public String listUsersReactive(Model model)
     model.addAttribute("students", new ReactiveDataDriverContextVariable(userFlux, 50));
     return "students";
 }
-{% endhighlight %}
+```
 
 ReactiveDataDriverContextVariable internamente utilizará Server-Sent Event para enviar los datos al cliente. Puedes ver un tutorial de Server-Sent Event con Spring [aquí](https://windoctor7.github.io/Spring-SSE.html) y con Spring 5 sin Thymeleaf [aquí](https://windoctor7.github.io/Spring-Web-Flux.html)
 
@@ -356,7 +356,7 @@ Podemos observar que al ingresar a [http://localhost:8080/list-students-reactive
 
 Si queremos jugar un poco y ver como van apareciendo en la página elemento por elemento, podemos poner un retardo de 1 segundo en la generación que el Flux (Publisher) emitirá y cambiar el buffer de elementos de ReactiveDataDriverContextVariable.
 
-{% highlight java %}
+```java
 @GetMapping("/list-students-reactive")
 public String listUsersReactive(Model model)
 {
@@ -364,11 +364,11 @@ public String listUsersReactive(Model model)
     model.addAttribute("students", new ReactiveDataDriverContextVariable(userFlux, 1));
     return "students";
 }
-{% endhighlight %}
+```
 
 De esta forma podremos ver como se muestra en la página uno por uno cada elemento. Finalmente aclarar que cambiamos el valor de 50 a 1 debido a que los elementos no serán enviados al cliente hasta que el buffer se llene, es decir que si tuvieramos el siguiente código,
 
-{% highlight java %}
+```java
 @GetMapping("/list-students-reactive")
 public String listUsersReactive(Model model)
 {
@@ -376,7 +376,7 @@ public String listUsersReactive(Model model)
     model.addAttribute("students", new ReactiveDataDriverContextVariable(userFlux, 50));
     return "students";
 }
-{% endhighlight %}
+```
     
 Tendriamos que esperar 50 segundos para poder ver datos en la pantalla.
 

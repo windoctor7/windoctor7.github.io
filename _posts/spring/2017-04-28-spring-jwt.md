@@ -40,12 +40,12 @@ Cada una de estas partes se codifica en base64 de tal forma que el token generad
 #### Header
 El header consta de dos partes, el tipo de token y el algoritmo de hash.
 
-{% highlight json %}
+```json
 {
   "alg": "HS256",
   "typ": "JWT"
 }
-{% endhighlight %}
+```
 
 Si al JSON anterior lo codificamos en base64 tendremos nuestra primer parte del JWT.
 
@@ -58,14 +58,14 @@ El payload contiene datos como: iss (issuer), exp (expiration time) y sub  (subj
 
 Además podemos indicar otros campos como el nombre, roles, etc.
 
-{% highlight json %}
+```json
 {
   "sub": "1234567890",
   "name": "John Doe",
   "admin": true,
   "exp": "1425390142"
 }
-{% endhighlight %}
+```
 
 Al codificar el json anterior en base 64, obtenemos la segunda parte de nuestro JWT. Para más información recomiendo leer el [siguiente enlace](https://jwt.io/introduction/)
 
@@ -74,7 +74,7 @@ Al codificar el json anterior en base 64, obtenemos la segunda parte de nuestro 
 ## Creando la aplicación web
 Crearemos un sencillo servicio que devuelva una lista de usuarios
 
-{% highlight java %}
+```java
 @RestController
 public class UsuariosController {
 
@@ -83,7 +83,7 @@ public class UsuariosController {
         return Arrays.asList(new Usuario(1,"Paco"), new Usuario(2,"Pedro"), new Usuario(3, "Juan"));
     }
 }
-{% endhighlight %}
+```
 
 Si ejecutamos esta aplicación e ingresamos a http://localhost:8080/users nos pedirá un usuario y contraseña. Esto es así porque Spring Boot otorga una configuración de seguridad por defecto. El usuario por defecto es: user
 
@@ -101,7 +101,7 @@ En este punto nuestro servicio **/users** está expuesto a todo mundo. Necesitam
 
 Ahora definiremos las reglas de seguridad mediante una clase a la que llamaremos ``SecurityConfig``
 
-{% highlight java %}
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -129,13 +129,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("ADMIN");
     }
 }
-{% endhighlight %}
+```
 
 Note que ``LoginFilter`` y ``JwtFilter`` son clases que nosotros debemos crear y tendrán la función de filtros.
 
 ``LoginFilter``se encargará de interceptar las peticiones que provengan de **/login** y obtener el username y password que vienen en el body de la petición. 
 
-{% highlight java %}
+```java
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     public LoginFilter(String url, AuthenticationManager authManager) {
@@ -198,13 +198,13 @@ class User {
         this.password = password;
     }
 }
-{% endhighlight %}
+```
 
 Los comentarios en el código explican por si solo su funcionamiento. Lo que hemos hecho hasta aquí es definir nuestras reglas de acceso en la clase SecurityConfig e indicamos un user/password por default que se carga en memoria, para pequeños servicios esto está bien, sin embargo en casos más críticos tendremos más usuarios y deberíamos almacenarlos en una base de datos. En otro cookbook explicaré como hacer esto, por lo pronto nos bastará tener un único usuario cargado en memoria. 
 
 Cuando llega una petición **/login** nuestro filtro ``LoginFilter`` se encargará de validar las credenciales y en caso de ser válidas, creará un JWT y se enviará de regreso al cliente. A partir de aquí el cliente deberá enviar este mismo token al servidor cada vez que solicite recursos protegidos. Podemos observar que tenemos una clase de utilidad llamada ``JwtUtil`` la cuál usamos para crear el token.
 
-{% highlight java %}
+```java
 public class JwtUtil {
 
     // Método para crear el JWT y enviarlo al cliente en el header de la respuesta
@@ -249,13 +249,13 @@ public class JwtUtil {
         return null;
     }
 }
-{% endhighlight %}
+```
 
 Nuevamente los comentarios en el código explican su funcionamiento.
 
 Finalmente implementamos nuestro segundo filtro. Este filtro tendra como función "validar" el token proporcionado por el cliente. Pongo entre comillas validar puesto que esta tarea no la hará propiamente el filtro, sino que usará nuestra clase de utilidad ``JwtUtil`` 
 
-{% highlight java %}
+```java
 /**
  * Las peticiones que no sean /login pasarán por este filtro
  * el cuál se encarga de pasar el "request" a nuestra clase de utilidad JwtUtil
@@ -277,7 +277,7 @@ public class JwtFilter extends GenericFilterBean {
         filterChain.doFilter(request,response);
     }
 }
-{% endhighlight %}
+```
 
 ---
 

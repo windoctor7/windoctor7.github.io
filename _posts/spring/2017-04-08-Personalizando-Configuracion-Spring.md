@@ -14,7 +14,7 @@ Casi siempre necesitamos personalizar la configuración de nuestra aplicación s
 ## Primer ejemplo
 Teniendo nuestra aplicación Spring Boot, vamos a crear una clase que imprima un simple texto dependiendo del ambiente de ejecución.
 
-{% highlight java %}
+```java
     @Component
     public class PrimerEjemplo {
 
@@ -30,7 +30,7 @@ Teniendo nuestra aplicación Spring Boot, vamos a crear una clase que imprima un
                     env.getProperty("url.smtp"));
         }
     }
-{% endhighlight %}
+```
 
 
 Según la [documentación de Spring](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/core/env/Environment.html),``Environment`` es una interfaz que representa el entorno en el cuál está corriendo la aplicación actual y modela dos aspectos claves del entorno de la aplicación: profiles y properties. 
@@ -38,13 +38,13 @@ Según la [documentación de Spring](http://docs.spring.io/spring/docs/current/j
 Por lo anterior es que podemos usar el método _getProperty_ para obtener el valor de la propiedad _url.smtp_ definida en el archivo principal de configuración de spring boot.
 
 **application.properties**
-{% highlight properties %}
+```properties
 url.smtp="200.123.45.65"
-{% endhighlight %}
+```
 
 Para ejecutar este primer ejemplo basta agregar a la clase principal de spring boot un ``CommandLineRunner``.
 
-{% highlight java %}
+```java
 @SpringBootApplication
 public class DemoApplication {
 
@@ -65,7 +65,7 @@ public class DemoApplication {
         };
     }
 }
-{% endhighlight %}
+```
 
 Al ejecutarlo veremos en la consola lo siguiente:
 
@@ -78,19 +78,19 @@ Hasta ahora solo hemos leído una propiedad del archivo _application.properties_
 Vamos a crear un archivo de propiedades adicional agregando la misma clave _url.smtp_ pero con diferente valor.
 
 **application-dev.properties**
-{% highlight properties %}
+```properties
 url.smtp=10.60.34.123
-{% endhighlight %}
+```
 
 Para que Spring pueda obtener el valor de una propiedad mediante la interfaz ``Environment`` se utiliza la convención de nombres ``application-{profile}.properties`` 
 
 En el archivo _build.gradle_ agregamos lo siguiente,
 
-{% highlight java %}
+```java
 bootRun {
     args = ["--spring.profiles.active=dev"]
 }
-{% endhighlight %}
+```
 
 Al ejecutar nuevamente la aplicación, ahora obtendremos el siguiente texto en la consola,
 

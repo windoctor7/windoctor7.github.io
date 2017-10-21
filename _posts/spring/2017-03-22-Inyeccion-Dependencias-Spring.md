@@ -23,7 +23,7 @@ Vamos a suponer que estamos en un área de cobranza donde nos han pedido el sigu
 
 Procedemos a crear la clase Cliente
 
-{% highlight java %}
+```java
 import java.util.Calendar;
 
 public class Cliente {
@@ -47,7 +47,7 @@ public class Cliente {
         }
     }
 }
-{% endhighlight %}
+```
 
 Con el código anterior, lo primero que sale a relucir es que nuestra clase Cliente solo puede envíar SMS, está casada con una clase concreta. ¿Qué pasa si después nos piden envíar correos electrónicos o incluso mensajes vía Twitter?
 
@@ -55,7 +55,7 @@ Otra de las desventajas de tener clases concretas es que dificulta la escritura 
 
 Con unos pocos cambios podemos hacer que nuestra clase <code>Cliente</code> ya no dependa de una clase concreta y dejarla preparada para que pueda envíar cualquiera de los 3 tipos de mensajes, SMS, Email y Twitter.
 
-{% highlight java %}
+```java
 public class Cliente {
 
     private long id;
@@ -84,15 +84,15 @@ public class Cliente {
         }
     }
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 public interface IMensaje {
     void enviar(String destinatario, String mensaje);
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 public class MensajeTwitter implements IMensaje {
 
     @Override
@@ -101,12 +101,12 @@ public class MensajeTwitter implements IMensaje {
     }
 
 }
-{% endhighlight %}
+```
 
 
 Nuestro código principal para probar esto quedaría como sigue:
 
-{% highlight java %}
+```java
 public class Main {
     public static void main(String[] args) {
         Cliente cliente = new Cliente();
@@ -123,7 +123,7 @@ public class Main {
         cliente.enviarRecordatorio();
     }
 }
-{% endhighlight %}
+```
 
 En la consola veríamos la siguiente salida:
 
@@ -151,7 +151,7 @@ compile group: 'org.springframework', name: 'spring-context', version: '4.1.9.RE
 
 Ahora modificaremos un poco nuestra clase Main para que luzca de la siguiente forma:
 
-{% highlight java %}
+```java
 public class Main {
 
     public static void main(String[] args) {
@@ -172,13 +172,13 @@ public class Main {
         cliente.enviarRecordatorio();
     }
 }
-{% endhighlight %}
+```
 
 Del código anterior nos percatamos que además de tener nuevas líneas de código, eliminamos la línea donde inyectabamos un objeto de tipo <code>MensajeTwitter</code>.
 
 A nuestra clase cliente le agregamos dos anotaciones, <code>@Component</code> y <code>@Autowired</code>
 
-{% highlight java %}
+```java
 @Component
 public class Cliente {
 
@@ -196,7 +196,7 @@ public class Cliente {
     private IMensaje mensaje;
     ...
     ...
-{% endhighlight %}
+```
 
 Si en nuestra clase <code>Cliente</code> tenemos un atributo del tipo <code>IMensaje</code> 
 
@@ -209,7 +209,7 @@ Con lo anterior le estamos diciendo a Spring que le inyecte a la clase <code>Cli
 
 Dado que queremos que <code>MensajeTwitter</code> sea inyectada por Spring, debemos marcarla con la anotación @Component
 
-{% highlight java %}
+```java
 @Component
 public class MensajeTwitter implements IMensaje {
 
@@ -219,13 +219,13 @@ public class MensajeTwitter implements IMensaje {
     }
 
 }
-{% endhighlight %}
+```
 
 Si ejecutamos nuestra clase <code>Main</code> obtendremos el mismo resultado que nuestro primer ejemplo donde no usamos Spring, solo que ahora fue Spring quien le inyectó a <code>Cliente</code> el objeto <code>MensajeTwitter</code>.
 
 Vamos ahora a simular el envío de email y sms, para ello vamos a crear las correspondientes implementaciones.
 
-{% highlight java %}
+```java
 @Component
 public class MensajeEmail implements IMensaje {
     @Override
@@ -233,9 +233,9 @@ public class MensajeEmail implements IMensaje {
         System.out.printf("Enviando mensaje por correo electronico a %s \n Mensaje: %s", destinatario, mensaje);
     }
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 @Component
 public class MensajeSms implements IMensaje {
     @Override
@@ -243,11 +243,11 @@ public class MensajeSms implements IMensaje {
         System.out.printf("Enviando mensaje SMS a %s \n Mensaje: %s", destinatario, mensaje);
     }
 }
-{% endhighlight %}
+```
 
 Si a nuestro cliente ahora le cambiamos su medio de contacto por email,
 
-{% highlight java %}
+```java
 public class Main {
     public static void main(String[] args) {
     .....
@@ -255,7 +255,7 @@ public class Main {
     .....
    }
 }
-{% endhighlight %}
+```
 	
 Al ejecutar nuestro ejemplo obtendremos una fea excepción por parte de Spring.
 
@@ -265,15 +265,15 @@ Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: No
 
 Spring nos está diciendo que no sabe que tipo de objeto inyectar puesto que existen 3 implementaciones de <code>IMensaje</code>. Spring infiere el tipo de objeto a inyectar cuando solo existe una sola implementación, pero cuando existe más de una, Spring no es capaz de leer nuestros pensamientos razón por la cuál debemos indicarle a Spring el tipo de objeto en específico que deberá inyectar.
 
-{% highlight java %}
+```java
 	@Autowired
     @Qualifier("email")
     private IMensaje mensaje;
-{% endhighlight %}
+```
 
 Con la anotación <code>@Qualifier</code> le indicamos el nombre del objeto concreto que deseamos inyectar. Este nombre debe corresponder con el que definimos en la anotación @Component.
 
-{% highlight java %}
+```java
 @Component(value = "email")
 public class MensajeEmail implements IMensaje {
     @Override
@@ -281,7 +281,7 @@ public class MensajeEmail implements IMensaje {
         System.out.printf("Enviando mensaje por correo electronico a %s \n Mensaje: %s", destinatario, mensaje);
     }
 }
-{% endhighlight %}
+```
 
 Nuestro cliente puede llegar y cambiar las reglas del envío de recordatorios y hacerlas un poco más comlejas:
 
@@ -303,7 +303,7 @@ En nuestro ejemplo, tenemos 3 objetos, Twitter, Email y SMS y cada objeto puede 
 
 Para codificar este patrón de diseño necesitamos de una interfaz ó clase abstracta, usualmente es una interfaz, pero como nosotros vamos a tener un pequeño código que será común a mis 3 objetos entonces usaremos una clase abstracta.
 
-{% highlight java %}
+```java
 public abstract class Recordatorio {
 
     Recordatorio recordatorio;
@@ -323,11 +323,11 @@ ejecutar la tarea en caso que el objeto actual no pueda resolverlo.
     
     public abstract void enviar(Cliente cliente);
 }
-{% endhighlight %}
+```
 
 Ahora creamos las implementaciones:
 
-{% highlight java %}
+```java
 @Component
 public class RecordatorioEmail extends Recordatorio{
 
@@ -345,9 +345,9 @@ public class RecordatorioEmail extends Recordatorio{
             recordatorio.enviar(cliente);
     }
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 @Component
 public class RecordatorioSms extends Recordatorio {
 
@@ -365,9 +365,9 @@ public class RecordatorioSms extends Recordatorio {
     }
 }
 
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 @Component
 public class RecordatorioTwitter extends Recordatorio {
 
@@ -382,7 +382,7 @@ public class RecordatorioTwitter extends Recordatorio {
             tweet.enviar(cliente.getTwitter(), "Mensaje enviado por Twitter");
     }
 }
-{% endhighlight %}
+```
 
 En nuestras 3 nuevas clases están codificadas las reglas para el envio de recordatorios. Nuevamente las vuelvo a poner:
 
@@ -396,7 +396,7 @@ En nuestras 3 nuevas clases están codificadas las reglas para el envio de recor
 
 Finalmente en nuestra clase <code>Cliente</code> tendremos:
 
-{% highlight java %}
+```java
     @Autowired
     private Recordatorio recordatorioEmail;
 
@@ -414,7 +414,7 @@ Finalmente en nuestra clase <code>Cliente</code> tendremos:
             recordatorioEmail.enviar(this);
         }
     }
-{% endhighlight %}
+```
 
 Debemos tener un punto de partida, en este caso es el Email. En caso que el Email no pueda ser manejado, el siguiente será el SMS. En caso que el SMS no pueda ser manejado, será el Twitter.
 

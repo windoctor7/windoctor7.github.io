@@ -48,7 +48,7 @@ Este tutorial cubre la inyección de dependencias usando Tapestry IoC y Spring I
 
 Tomando las mismas clases del ejemplo con Tapestry tenemos que marcar con la anotación ``@Component`` a las clases que serán inyectadas,  en este caso es la clase Message a la que debemos marcar como un componente de Spring para poder ser inyectada desde MessagePrinter.
 
-{% highlight java %}
+```java
     @Component
     public class Message implements IMessage {
         @Override
@@ -56,11 +56,11 @@ Tomando las mismas clases del ejemplo con Tapestry tenemos que marcar con la ano
             return "Mi primer ejemplo con Tapestry IOC!!!";
         }
     }
-{% endhighlight %}
+```
 
 A la clase MessagePrinter le agregaremos la anotación de Spring llamada ``@Autowired`` además que también le agregaremos la anotación @Component. Notar que le dejamos la anotación @Inject de Tapestry. Se la podemos quitar pero para tener nuestros dos ejemplos funcionando se la dejaremos.
 
-{% highlight java %}
+```java
     @Component
     public class MessagePrinter {
     
@@ -77,12 +77,12 @@ A la clase MessagePrinter le agregaremos la anotación de Spring llamada ``@Auto
         }
 
     }
-{% endhighlight %}
+```
 
 
 Finalmente vamos a crear otra clase con método main que contendrá el ApplicationContext de Spring 
 
-{% highlight java %}
+```java
     @ComponentScan
     public class ApplicationSpring {
 
@@ -93,4 +93,4 @@ Finalmente vamos a crear otra clase con método main que contendrá el Applicati
             messagePrinter.printMessage();
         }
     }
-{% endhighlight %}
+```

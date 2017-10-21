@@ -33,7 +33,8 @@ Para cargar con datos a la base de datos automáticamente cada vez que se inicie
 
 ---
 **schema.sql**
-{% highlight sql %}
+
+```sql
 CREATE TABLE departamento (
   id IDENTITY PRIMARY KEY,
   nombre VARCHAR(64) NOT NULL
@@ -45,10 +46,11 @@ CREATE TABLE empleado (
   departamento_id INT,
   CONSTRAINT FK_EMP_DEPT_ID FOREIGN KEY(departamento_id) REFERENCES departamento(id)
 );
-{% endhighlight %}
+```
 ---
 **data.sql**
-{% highlight sql %}
+
+```sql
 insert into departamento(id, nombre) values(1, 'Sistemas');
 insert into departamento(id, nombre) values(2, 'Contabilidad');
 insert into departamento(id, nombre) values(3, 'Auditoria');
@@ -60,7 +62,7 @@ insert into empleado(id, nombre, departamento_id) values(2, 'Juan Zavala', 2);
 insert into empleado(id, nombre, departamento_id) values(3, 'Antonio Pérez', 3);
 insert into empleado(id, nombre, departamento_id) values(4, 'Marco Ávila', 3);
 insert into empleado(id, nombre, departamento_id) values(5, 'Pedro Martínez', 1);
-{% endhighlight %}
+```
 ---
 
 Con solo realizar esta configuración como mínimo podemos ejecutar el proyecto con bootRun y en el log de la aplicación observar la ejecución de nuestros scripts sql:
@@ -75,7 +77,7 @@ Por default, cuando Spring Boot tiene el starter **spring-boot-starter-jdbc** y 
 
 Veamos algo más de acción y mediante un sencillo servicio REST visualicemos los datos:
 
-{% highlight java %}
+```java
 @RestController
 public class JdbcController {
 
@@ -89,11 +91,11 @@ public class JdbcController {
     }
 }
 
-{% endhighlight %}
+```
 
 También necesitamos los siguientes POJOS.
 
-{% highlight java %}
+```java
 public class Departamento {
 
     private int id;
@@ -101,9 +103,9 @@ public class Departamento {
     
     // setters y getters
 }
-{% endhighlight %}
+```
 
-{% highlight java %}
+```java
 public class Empleado {
 
     private int id;
@@ -113,7 +115,7 @@ public class Empleado {
     
     //setters y getters
 }
-{% endhighlight %}
+```
 
 Ingresa desde tu navegador a [http://localhost:8080/departamentos](http://localhost:8080/departamentos) y verás que tenemos los departamentos que cargamos desde el archivo **data.sql**
 
@@ -153,7 +155,7 @@ Spring Boot intentará inicializar la base de datos mediante los archivos **sche
 ---
 **schema-mysql.sql**
 
-{% highlight sql %}
+```sql
 CREATE TABLE IF NOT EXISTS departamento (
   id MEDIUMINT NOT NULL AUTO_INCREMENT,
   nombre VARCHAR(64) NOT NULL,
@@ -168,7 +170,7 @@ CREATE TABLE IF NOT EXISTS empleado (
   FOREIGN KEY(departamento_id) REFERENCES departamento(id)
 
 );
-{% endhighlight %}
+```
 
 ---
 
@@ -210,7 +212,7 @@ La mayoría de las veces la información que existe en una base de datos de desa
 
 Vamos a crear una nueva clase repositorio:
 
-{% highlight java %}
+```java
 @Repository
 public class DepartamentoRepository {
 
@@ -222,13 +224,13 @@ public class DepartamentoRepository {
                 new BeanPropertyRowMapper<>(Departamento.class));
     }
 }
-{% endhighlight %}
+```
 
 Para indicarle a Spring Boot que utilice un DataSource que se conecte a una base de datos H2 y que **únicamente** lo haga cuando estemos ejecutando la aplicación con el profile test, debemos configurar el DataSource de forma programática. 
 
 Basta añadir el siguiente código a una clase que tenga la anotación ``@Configuration``. En este ejemplo, lo he puesto en la clase del punto de partida de toda aplicación Spring Boot, es decir, aquella que tiene la anotación ``@SpringBootApplication``
 
-{% highlight java %}
+```java
 @Bean
 @Profile("test")
 public DataSource testDataSource() {
@@ -237,7 +239,7 @@ public DataSource testDataSource() {
             .setType(EmbeddedDatabaseType.H2)
             .build();
 }
-{% endhighlight %}
+```
 
 Finalmente, creamos nuestra prueba unitaria estableciendo el profile a "test" para que Spring Boot inyecte el DataSource de conexión a H2 y no a MySQL. Sin embargo, recordemos que en el **application.properties** hemos establecido la plataforma a mysql **spring.datasource.platform=mysql**
 
@@ -252,7 +254,7 @@ Spring Boot buscará el script schema-mysql.sql en lugar de schema-h2.sql. Para 
 
 Spring Boot automáticamente cargará las propiedades del application-test.properties y ahí es donde cambiamos que la plataforma será h2 en lugar de mysql. Con esto ya estamos en posibilidades de crear nuestra prueba unitaria.
 
-{% highlight java %}
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest()
 @ActiveProfiles("test") //establecemos a "test" el profile para iniciar esta prueba.
@@ -268,7 +270,7 @@ public class SpringJdbcApplicationTests {
 		assertEquals(5, departamentos.size()); // validamos que existan 5 departamentos
 	}
 }
-{% endhighlight %}
+```
 
 Al ejecutar la prueba Spring Boot configurará el DataSource para conectarse a la base de datos embebida H2 y no a MySQL.
 

@@ -14,32 +14,32 @@ Si necesitamos ejecutar tareas automáticamente y de forma periódica, usar la a
 
 Para habilitar el soporte de scheduling y poder usar la anotación ``@Scheduled`` de Spring  solo agregamos ``@EnableScheduling`` en nuestra clase principal de Spring Boot.
 
-{% highlight java %}
+```java
     @SpringBootApplication
     @EnableScheduling
     public class SpringSchedulerApplication
-{% endhighlight %}
+```
 
 ## Programando tareas
 
 Podemos programar una tarea para que se ejecute cada cierto tiempo.
 
-{% highlight java %}
+```java
     // Se ejecuta cada 3 segundos
     @Scheduled(fixedRate = 3000)
     public void tarea1() {
         System.out.println("Tarea usando fixedRate cada 3 segundos - " + System.currentTimeMillis() / 1000);
     }
-{% endhighlight %}
+```
 
 Usando ``fixedRateString``podemos tener el tiempo de ejecución en el archivo de configuración de spring boot.
 
-{% highlight java %}
+```java
     @Scheduled(fixedRateString = "${imprime.tarea}")
     public void tarea2() {
         System.out.println("Tarea usando fixedRateString cada 5 segundos - " + System.currentTimeMillis() / 1000);
     }
-{% endhighlight %}
+```
 
 
 y en el archivo **application.properties** ponemos esto.
@@ -48,12 +48,12 @@ y en el archivo **application.properties** ponemos esto.
 
 Si deseamos que nuestra tarea inicie su ejecución con un retardo inicial, entonces usaremos la propiedad ``initialDelay``
 
-{% highlight java %}
+```java
     @Scheduled(fixedRate = 3000, initialDelay = 10000)
     public void tarea3() {
         System.out.println("Tarea con retraso inicial de 10 segundos - " + System.currentTimeMillis() / 1000);
     }
-{% endhighlight %}
+```
 
 Lo anterior causará que pasen 10 segundos antes que la tarea se ejecute por primera vez, posteriormente las siguientes ejecuciones se realizarán con normalidad, cada 3 segundos.
 
@@ -61,12 +61,12 @@ Lo anterior causará que pasen 10 segundos antes que la tarea se ejecute por pri
 
 Si lo que deseamos es configurar con mayor flexibilidad la ejecución de una tarea, entonces debemos usar expresiones cron.
 
-{% highlight java %}
+```java
     @Scheduled(cron = "0 9 23 ? * 5 ")
     public void tarea4() {
         System.out.println("Tarea usando expresiones cron");
     }
-{% endhighlight %}
+```
 
 La tarea anterior se ejecutará a las 23 horas con 9 minutos y 0 segundos, todos los meses, los días 5 (viernes).
 
