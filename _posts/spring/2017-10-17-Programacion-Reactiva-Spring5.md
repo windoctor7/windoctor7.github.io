@@ -98,16 +98,16 @@ public class NumerosController {
 
 Si ejecutamos el proyecto con bootRun y accedemos a la dirección [http://localhost:8080/numeros](http://localhost:8080/numeros) veremos en el navegador la siguiente salida:
 
-    data:1
+```
+data:1
 
-    data:2
+data:2
 
-    data:3
+data:3
 
-    .....
+.....
 
-    .....
-      
+```   
 
 Al mismo tiempo, en la consola veremos algo como esto:
 
