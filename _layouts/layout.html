@@ -17,15 +17,13 @@
     {% if page.url %}
       <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
     {% endif %}
-    {% if page.description %}
-      <meta name="twitter:description" content="{{ page.description }}">
+    {% if page.title %}
+      <meta name="twitter:description" content="{{ page.title }}">
     {% else %}
       <meta name="twitter:description" content="{{ site.description }}">
     {% endif %}
     {% if site.avatar %}
-      <meta name="twitter:image:src" content="{{ site.url }}{{ site.avatar }}">
-    {% else %}
-      <meta name="twitter:image:src" content="{{ site.url }}/path/to/image/logo.png">
+      <meta name="twitter:image:src" content="{{ site.url }}static/img/{{ site.avatar }}">    
     {% endif %}
     <link rel="favicon" href="{{ site.baseurl }}static/img/favicon.ico">
 
