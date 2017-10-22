@@ -223,6 +223,8 @@ Los 3 modos y cuando se ejecutan se explican a continuación:
 
 Antes de empezar con el ejemplo, debes cargar a mongo algunos datos. Puedes obtener un data JSON desde este repositorio de [github](https://github.com/windoctor7/codigo-tutoriales-blog/raw/master/spring-webflux-2/src/main/resources/json/students.json) e importarlos a la base de datos **test** de mongodb.
 
+    mongoimport -h 127.0.0.1:27017 --db test --collection students --file students.json
+
 Creamos el POJO a donde mapearemos los campos con los de la colección "students" de mongo.
 
 ```java
