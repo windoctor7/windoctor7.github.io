@@ -1,10 +1,11 @@
 ---
 layout: post
 section-type: post
-title: Inyección de la dependencia. Primera Parte
+title: Inyección de la dependencia.
 category: spring
+overview: En este tutorial aprenderás sobre el concepto de Inyección de Dependencias utilizando Spring. En el ejemplo aplicado, se usa el patrón de diseño Chain of Responsibility.
 tags: [ 'inyeccion de dependencia', 'pruebas unitarias' ]
-source: https://github.com/windoctor7/inyeccion-dependencia
+source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/inyeccion-dependencia
 ---
 
 Aunque muchos lo oyen, no todos lo entienden o aplican. El concepto de Inyección de la Dependencia gira en torno a dos cosas:
