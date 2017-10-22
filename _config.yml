@@ -15,9 +15,9 @@ safe: true
 # edit here to achieve your personal greatness
 url: http://windoctor7.github.io/
 baseurl: 
-title: Desarrollo ágil - Java, Spring Boot, Tapestry, Mongo, Gradle
+title: Desarrollo ágil - Java, Kotlin, Spring Boot, Tapestry, Mongo, Gradle
 author: Ascari Q. Romo Pedraza
-description: Desarrollo ágil de aplicaciones con Java (Spring Boot, Tapestry, Mongo, Gradle)
+description: Desarrollo ágil de aplicaciones(Java, Kotlin, Spring Boot, Tapestry, Mongo, Gradle)
 avatar: rsz_profile.jpg
 email: molder.itp@gmail.com
 github: windoctor7 # username
