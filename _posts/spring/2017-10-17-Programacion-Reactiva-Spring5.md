@@ -122,14 +122,14 @@ Al mismo tiempo, en la consola veremos algo como esto:
 Una de las características de las aplicaciones reactivas es que son no bloqueantes, son asíncronas. Para entender a lo que me refiero, modifiquemos el método ``multiplicar()`` y agreguemos un retardo de 5 segundos.
 
 ```java
-    public static void multiplicar(Integer n)  {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Subscriber2: "+n*n);
+public static void multiplicar(Integer n)  {
+    try {
+        Thread.sleep(5000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
     }
+    System.out.println("Subscriber2: "+n*n);
+}
 ```
 
 
@@ -221,7 +221,7 @@ Los 3 modos y cuando se ejecutan se explican a continuación:
 1. **DATA-DRIVEN**. Cuando una variable data-driven a sido especificada en el contexto. Esta variable de contexto deberá ser del tipo [IReactiveDataDriverContextVariable](http://www.thymeleaf.org/apidocs/thymeleaf-spring5/3.0.5.M3/org/thymeleaf/spring5/context/webflux/IReactiveDataDriverContextVariable.html). En esta variable es donde pondremos el flujo de datos que el Publisher emita.
 
 
-Antes de empezar con el ejemplo, debes cargar a mongo algunos datos. Puedes obtener un data JSON desde este repositorio de [github](https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/students.json) e importarlos a la base de datos **test** de mongodb.
+Antes de empezar con el ejemplo, debes cargar a mongo algunos datos. Puedes obtener un data JSON desde este repositorio de [github](https://github.com/windoctor7/codigo-tutoriales-blog/raw/master/spring-webflux-2/src/main/resources/json/students.json) e importarlos a la base de datos **test** de mongodb.
 
 Creamos el POJO a donde mapearemos los campos con los de la colección "students" de mongo.
 
@@ -243,7 +243,7 @@ public class Student {
 
 Mientras no indiquemos lo contrario, Spring Boot nos conectará por default a la base de datos mongo localhost:27017/test
 
-Por lo tanto, será en la base de datos **test** donde deberás cargar la información del JSON mencionado arriba. Este JSON trae poco más de 100,000 registros (en el mundo de las bases de datos nosql se le llaman "documentos"). Esta cantidad de información es interesante para ver el modo reactivo y no reactivo que estaremos viendo en estos ejemplos.
+Por lo tanto, será en la base de datos **test** donde deberás cargar la información del JSON mencionado arriba. Este JSON trae poco más de 17,000 registros (en el mundo de las bases de datos nosql se le llaman "documentos"). Esta cantidad de información es interesante para ver el modo reactivo y no reactivo que estaremos viendo en estos ejemplos.
 
 También debemos creamos un repositorio Spring Data, pero lo haremos con soporte reactivo mediante la interfaz [ReactiveCrudRepository](https://docs.spring.io/spring-data/data-commons/docs/2.0.0.M3/api//org/springframework/data/repository/reactive/ReactiveCrudRepository.html)
 
@@ -380,3 +380,4 @@ public String listUsersReactive(Model model)
     
 Tendriamos que esperar 50 segundos para poder ver datos en la pantalla.
 
+Déjame tus comentarios y espera una segunda parte de este tutorial! No olvides descargar el código fuente y revisar el ejemplo tu mismo.
