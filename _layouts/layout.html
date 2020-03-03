@@ -26,6 +26,16 @@
       <meta name="twitter:image:src" content="{{ site.url }}static/img/{{ site.avatar }}">
     
     {% endif %}
+	  
+	        {% if page.image %}
+        <meta property="og:image" content="{{page.image}}" />
+        <meta name="twitter:image" content="{{page.image}}" />
+    {% else %}
+    <!--Photo by Chris Ried on Unsplash-->
+        <meta property="og:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
+        <meta name="twitter:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
+    {% endif %}
+	  
     <link rel="favicon" href="{{ site.baseurl }}static/img/favicon.ico">
 
 
