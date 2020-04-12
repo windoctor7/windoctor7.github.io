@@ -1,0 +1,47 @@
+---
+layout: layout
+title: Desarrollo Móvil
+---
+<title>Tutoriales sobre R</title>
+<div class="container">
+<h3>RStudio</h3>
+  <div class="panel panel-default">
+    <div class="panel-body">
+		{% for post in site.posts %}
+            {% assign categoryDowncase = post.category | downcase %}
+            {% if  categoryDowncase contains 'rstudio' %}
+                <div class="row">
+                     <div class="col-sm-4 col-md-4 col-lg-4">
+                         <h5 style="text-align: right">
+                             {% assign m = post.date | date: "%-m" %}
+                                {{ post.date | date: "%-d" }}
+                                {% case m %}
+                                  {% when '1' %}Enero
+                                  {% when '2' %}Febrero
+                                  {% when '3' %}Marzo
+                                  {% when '4' %}Abril
+                                  {% when '5' %}Mayo
+                                  {% when '6' %}Junio
+                                  {% when '7' %}Julio
+                                  {% when '8' %}Agosto
+                                  {% when '9' %}Septiembre
+                                  {% when '10' %}Octubre
+                                  {% when '11' %}Noviembre
+                                  {% when '12' %}Diciembre
+                                {% endcase %}
+                            {{ post.date | date: "%Y" }}
+                         </h5>                                                
+                     </div>
+                     <div class="col-sm-8 col-md-8 col-lg-8">
+                         <h5 style="text-align: left">
+                            <strong><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></strong>            
+                         </h5>                         
+                         {{post.overview}}
+                     </div>
+                    <hr />
+                </div>            
+            {% endif %}        
+	    {% endfor %}
+	</div>
+  </div>
+</div>
