@@ -33,7 +33,7 @@
    
     {% if page.image %}
     <meta property="og:image" content="{{ site.url }}/assets/images/{{ page.image }}" >
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/windoctor7/windoctor7.github.io/master/static/img/{{page.image}}" />
+    <meta name="twitter:image" content="{{ site.url }}/assets/images/{{ page.image }}" />
     {% else %}
         <meta property="og:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
         <meta name="twitter:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
