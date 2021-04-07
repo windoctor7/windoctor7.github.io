@@ -1,11 +1,11 @@
 ---
 layout: post
 section-type: post
-title: Nuestra primer Skill para Alexa con Java
+title: Tu primer skill alexa con Java
 category: alexa-skills
 overview: Desarrollaremos una skill que sume dos numeros. El backend estará construido en Java y lo subiremos a Amazon Lambda
 tags: ['alexa-skills' ]
-image: https://raw.githubusercontent.com/windoctor7/windoctor7.github.io/master/static/img/alexa-logo.png
+image: card_alexa.png
 source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/calculadora
 ---
 
