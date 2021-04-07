@@ -4,31 +4,33 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="{{ site.author }}" />
+    <meta name="author" content="{{ site.author }}" />
     <meta name="description" content="{{ site.description }}">
-      <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@windoctor">
-    <meta name="twitter:creator" content="@windoctor">
+    
     {% if page.title %}
-      <meta name="twitter:title" content="{{ page.title }}">
+    <meta property="og:title" content="{{ page.title }}">
+    <meta name="twitter:title" content="{{ page.title }}">
     {% else %}
-      <meta name="twitter:title" content="{{ site.title }}">
+    <meta property="og:title" content="{{ site.title }}">
+    <meta name="twitter:title" content="{{ site.title }}">
     {% endif %}
+    
+    <meta property="og:type" content="website" />
+    
     {% if page.url %}
-      <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+    <meta property="og:url"  content="{{ site.url }}{{ page.url }}" />  
     {% endif %}
-    {% if page.description %}
-      <meta name="twitter:description" content="{{ page.description }}">
+    
+    {% if page.overview %}
+    <meta name="og:description" content="{{ page.overview }}">
     {% else %}
-      <meta name="twitter:description" content="{{ site.description }}">
+    <meta name="og:description" content="{{ site.description }}">
     {% endif %}
    
-	  
-	        {% if page.image %}
-        <meta property="og:image" content="{{page.image}}" />
-        <meta name="twitter:image" content="{{page.image}}" />
+    {% if page.image %}
+    <meta property="og:image" content="{{page.image}}" />
+    <meta name="twitter:image" content="{{page.image}}" />
     {% else %}
-    <!--Photo by Chris Ried on Unsplash-->
         <meta property="og:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
         <meta name="twitter:image" content="https://github.com/windoctor7/windoctor7.github.io/blob/master/static/img/logo_blog.jpg" />
     {% endif %}
