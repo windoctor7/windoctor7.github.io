@@ -3,7 +3,8 @@ layout: post
 section-type: post
 title: ¿Como funciona la compresión ZIP?
 category: algoritmos
-overview: En este tutorial aprenderás las bases del algoritmo de Huffman, el algoritmo más utilizado para comprimir archivos de texto. 
+overview: Te explico el algoritmo de Huffman, entenderás como se comprime un archivo de texto en ZIP. 
+image: compress-zip.png
 tags: ['kotlin', 'ingenieria de software' ]
 ---
 
