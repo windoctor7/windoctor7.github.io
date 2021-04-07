@@ -9,7 +9,7 @@ tags: ['kotlin', 'docker' ]
 ---
 
 # Introducción
-Hace algunos años que dejé de desarrollar software de manera profesional, pues aunque en mi trabajo mis funciones siguen estando en el área de TI, son a un nivel más ejecutivo, sin embargo, como buenos Líderes TI, nunca debemos dejar de aprender, es por eso que escribo este tutorial a modo de reforzar lo aprendido en el [Curso de Docker](https://platzi.com/cursos/docker/) que grabó **Guido Vilariño** en Platzi.
+Hace algunos años que dejé de desarrollar software de manera profesional, pues aunque en mi trabajo mis funciones siguen estando en el área de TI, son a un nivel más ejecutivo, sin embargo, como buenos Líderes TI, nunca debemos dejar de aprender. Este no es un tutorial desde cero sobre docker y supone que un conocimiento básico de gradle.
 
 # Creando la App Kotlin
 Para mantener la simplicidad del ejercicio, vamos a crear una imagen docker con una sencilla app en kotlin que haga el Hola Mundo, pero no compilaremos la app kotlin dentro del contenedor, más bien desplegaremos la app ya empaquetada. 
