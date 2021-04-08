@@ -1,11 +1,12 @@
 ---
 layout: post
-title: Elixir para desarrolladores Java
+title: Iniciate en Elixir - Resolviendo kata de codewars.com
 category: elixir
-overview: Una rápida introducción a Elixir, dirigida a programadores con cierta experiencia en lenguaje Java o similar. 
-tags:
-- elixir
+overview: Solucionamos la kata "Two Sum" de codewars para explicar las diferencias entre Java y Elixir. 
+image: card_elixir_java.png
+tags: ['elixir']
 ---
+
 ![logo elixir](/static/img/elixir-logo2.png)
 
 # INTRODUCCIÓN
