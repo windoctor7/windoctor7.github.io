@@ -1,54 +1,92 @@
 ---
 layout: post
-title: Iniciate en Elixir - Resolviendo kata de codewars.com
+title: Introducción a Elixir - Resolviendo kata de codewars.com
 category: elixir
 overview: Solucionamos la kata "Two Sum" de codewars para explicar las diferencias entre Java y Elixir. 
 image: card_elixir_java.png
 tags: ['elixir']
 ---
 
-![logo elixir](/static/img/elixir-logo2.png)
+# Introducción
+Elixir es un lenguaje de programación funcional y es ideal para quebrar la cabeza a quienes venimos de lenguajes orientados a objetos como Java, por ejemplo no tenemos sentencias de repetición como los bucles ``for/while``. Aquellos problemas que requieran utilizar estructuras de repetición tradicionales, deberán resolverse  con recursividad.
+ 
+Lo anterior definitivamente te quebrará la cabeza. Si es tu primer acercamiento con un lenguaje funcional, te parecerá increible que no existan este tipo de estructuras, pero como verás, no son necesarias.
 
-# INTRODUCCIÓN
-Elixir es un lenguaje de programación funcional y es ideal para quebrar la cabeza a quienes venimos de lenguajes orientados a objetos como Java o Kotlin. Te recomiendo que tengas en mente estos 3 principios:
+Para empezar, debemos instalar elixir, lo cual resulta muy sencillo, en Mac usando Homebrew, en Linux con el gestor de paquetes o en Windows bajando el instalador. Revisa las instrucciones de instalación [aquí](https://elixir-lang.org/install.html)
 
-1. Los datos son inmutables
-1. No existen bucles (no hay sentencias ``for/while`` - ¡En serio!)
-1. Los datos son inmutables!!!!!!!!!
+```zsh
+❯ brew install elixir
+...
+❯ elixir -v
+Erlang/OTP 23 [erts-11.1.5] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
-Lo anterior es algo que definitivamente te quebrará la cabeza. Si es tu primer acercamiento con un lenguaje funcional, te parecerá increible que no existan ciclos for/while y quizá pienses que ¡Que lenguaje de programación tan más pobre! Otra cosa de la que debes olvidarte es querer declarar variables de instancia o a nivel de método, usarlas para almacenar diferentes valores y al final retornarla.
+Elixir 1.11.3 (compiled with Erlang/OTP 23)
+```
+Cabe mencionar que junto con elixir, también se bajará la máquina virtual de Erlang debido a que corre sobre ella. Valida que elixir se haya instalado correctamente tecleando ``elixir -v``.
 
-# UN EJEMPLO
-Vamos a resolver la siguiente kata de [codewars.com](https://www.codewars.com/kata/52c31f8e6605bcc646000082/train/elixir) para explicar las principales características de elixir y a su vez entender las diferencias mas importantes con lenguajes orientados a objetos como Java. Por favor revisa el enlace anterior para el detalle completo de la kata.
+Antes que nada, empecemos por crear un proyecto usando la herramienta MIX de elixir y posteriormente editar el archivo ``kata.ex`` que se encuentra en ``kata/lib``
+
+```elixir
+❯ mix new kata
+❯ cd kata
+❯ vim lib/kata.ex
+```
+
+Vamos a sustituir el contenido del archivo por este otro:
+
+```elixir
+defmodule Kata do
+   def hi() do
+      IO.puts("Hi ¿Cómo estás?")
+   end
+end
+```
+
+Finalmente ingresamos al modo interactivo de elixir con ``iex`` y ejecutamos nuestra función ``hi()``
+
+```elixir
+❯ iex -S mix
+iex(1)> Kata.hi()
+Hi ¿Como estas?
+:ok
+```
+
+Estamos listos para pasar a resolver el problema!
 
 ---
 
-### Kata
+# El Problema
 
-El reto consiste en que dado un arreglo de enteros, buscar 2 números diferentes que sumados me den el valor de un segundo parámetro llamado **target**. Los índices de estos dos números deberán ser retornados en un arreglo (o una tupla en el caso de Elixir). Por ejemplo, dado un arreglo de enteros ``[1,2,3]`` debemos buscar 2 números que sumados me den el valor de target que en este caso será 4, por lo tanto los números buscados son 1 y 3, así que debemos devolver en un arreglo los índices [0,2].
+El reto es una kata de [codewars.com](https://www.codewars.com/kata/52c31f8e6605bcc646000082/train/elixir) y consiste en que dado un arreglo de enteros, buscar 2 números diferentes que sumados me den el valor de un segundo parámetro llamado **target**. Por ejemplo:
 
-```java
+```elixir
+#¿Cuáles son los 2 números que sumados nos da 4?
+([1,2,3], 4)
+```
+En este caso, es claro que los números son 1 y 3, por lo tanto el programa debe devolver el índice de su posición en el arreglo, es decir, 0 y 2.
+
+```
 two_sum([1, 2, 3], 4) == {0, 2}
 ```
 
----
+Una implementación simple es tomar el primer elemento del arreglo y sumarlo con cada uno de los elementos posteriores y validar si la suma es 4, de lo contrario tomar el segundo elemento del arreglo y sumarlo con el resto de los elementos posteriores y así repetidamente.
+
+![algoritmo](static/img/kata_elixir_algoritmo.png)
 
 Entendido el problema, veamos una implementación básica en Java usando únicamente arreglos.
 
 ```java
-public static int[] twoSum(int[] numbers, int target){
-	int y1, y2 = 0;
-	for(int i = 0; i < numbers.length; i++){
-		y1 = target - numbers[i];
-		ior(int j = i+1; j < numbers.length; j++){
-			y2 = numbers[j];  
-			if(y2+numbers[i] == target){
-				return new int[]{y1,y2};
-			}
-		}
-	}
-	return null;
-}
+    public static int[] twoSum(int[] numbers, int target)
+    {
+       for(int i = 0; i < numbers.length; i++) {
+           for(int j = i + 1; j < numbers.length; j++) {
+               if(numbers[i] + numbers[j] == target){
+                   return new int[]{i, j};
+               }
+           }
+       }
+      return null; 
+    }
 ```
 
 Con la implementación anterior seguro que estamos tentados a hacer algo similar en Elixir, sin embargo, los lenguajes de programación funcional **carecen de bucles** y no guardan estados en sus variables, es decir, son inmutables. JavaScript no es un lenguaje que se pueda considerar funcional, aunque al igual que muchos otros como Java, Ruby o Kotlin que son Orientados a Objetos, permiten hacer programación funcional. Te lo repito de nuevo, en elixir **¡No hay bucles!, no hay ciclos for o while!!** y no hace falta ya que la solución a esto es la **¡Recursividad!**.
@@ -67,6 +105,18 @@ Sin embargo, para esta kata usaremos el módulo ``Enum`` que nos provee de varia
 ```
 
 Definimos una función llamada ``two_sum`` que recibe dos parámetros y como puedes ver, a diferencia de Java,  en elixir no se declara el tipo de dato que van a contener las variables. 
+
+Agrega la funcion ``two_sum()`` al archivo ``Kata.ex`` que venimos manejando y entonces entra al modo interactivo de elixir para ejecutarlo
+
+```elixir
+❯ iex -S mix
+iex(1)> Kata.two_sum([1,2,3],4)
+{2, 0}
+```
+
+Como puedes ver, nos devuelve la posición 2 y 0 del arreglo, que es dónde se encuentran los números 3 y 1 que al sumarlos nos da 4.
+
+Expliquemos ahora un poco sobre la sintaxis de elixir.
 
 ## Operador Pipe
 
