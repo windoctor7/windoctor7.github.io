@@ -1,10 +1,9 @@
 ---
 layout: post
 title: Patrón Singleton, ¿synchcronize o no synchcronize?
-tags:
-- Patrones Diseño
-- Java
-- Singleton
+category: java
+overview: Uno de los patrones más utilizados, pero ¿debe ser synchcronize?
+tags: ['java']
 ---
 
 El patrón de diseño Singleton nos permite crear una única instancia de una clase a los largo de todo el ciclo de vida de nuestra aplicación. En internet podemos encontrar algunas formas de implementar este patrón, por ejemplo en esta página de [Arquitectura Java](http://www.arquitecturajava.com/ejemplo-de-java-singleton-patrones-classloaders/) se muestra una implementación bastante mala ya que no es "thread safe", es decir, no es segura para concurrencia.

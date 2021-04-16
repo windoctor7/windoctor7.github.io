@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Desarrollo web ágil en Java con Tapestry
+category: java
 tags:
 - Tapestry
 - Java
