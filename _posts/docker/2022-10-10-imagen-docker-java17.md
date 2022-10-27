@@ -2,8 +2,11 @@
 layout: post
 section-type: post
 title: Reduciendo el tamaño de la JVM en imagen docker
+source: https://github.com/windoctor7/codigo-tutoriales-blog/tree/master/docker-springboot-java17
 category: docker
 overview: En este tutorial aprenderás como contenerizar un microservicio en spring boot con Docker y Java 17 creando una JRE personalizada cuya imagen sea menor a 90MB.
+image: docker_customjre.png
+tags: ['springboot', 'docker' ]
 ---
 
 # Introducción
@@ -107,6 +110,6 @@ Finalmente ejecutamos el contenedor y accedemos al ``http://localhost:8080/actua
 docker run -p 8080:8080 windoctor7/mso-java-17:0.0.1
 ```
 
-
+Queda de su lado implementar algún endpoint mas real, por fines prácticos no hice eso en este tutorial y en su lugar incluí la dependencia de [Spring Actuator](https://docs.spring.io/spring-boot/docs/1.3.5.RELEASE/reference/html/production-ready-monitoring.html)
 
 
